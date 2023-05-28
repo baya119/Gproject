@@ -1,4 +1,5 @@
 .NavbarItems{
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,6 +13,7 @@
     position: fixed;
     left: 50%;
     transform: translate(-50%);
+    z-index: 999;
 }
 .logo{
     color: rgb(0, 0, 0);

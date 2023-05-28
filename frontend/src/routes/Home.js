@@ -1,10 +1,21 @@
 import Banner from "../componets/Banner";
 import Navbar from "../componets/Navbar";
+import BannerImg from "../assets/pimg6.jpg"
+import Services from "../componets/Services";
 function Home(){
-    return(
+    return (
         <>
-        <Navbar/>
-        <Banner/>
+        <Navbar />
+        <Banner 
+        cName="banner"
+        banImg={BannerImg}
+        title="welcome to encharet"
+        text="Ethiopia's the first online bidding platform"
+        buttonText="sign up"
+        url="/"
+        btnClass="show"
+        />
+        <Services/>
         </>
     )
 }
