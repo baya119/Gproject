@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import "../componets/RegisterPage.css";
 
 import '../../src/App'
 

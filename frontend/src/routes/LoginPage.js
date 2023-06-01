@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import "../componets/Login.css";
 
 
 import '../../src/App'
