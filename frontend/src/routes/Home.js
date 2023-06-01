@@ -2,6 +2,7 @@ import Banner from "../componets/Banner";
 import Navbar from "../componets/Navbar";
 import BannerImg from "../assets/pimg6.jpg"
 import Services from "../componets/Services";
+import Footer from "../componets/Footer";
 function Home(){
     return (
         <>
@@ -16,6 +17,7 @@ function Home(){
         btnClass="show"
         />
         <Services/>
+        <Footer/>
         </>
     )
 }

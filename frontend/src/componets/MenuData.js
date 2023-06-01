@@ -25,12 +25,12 @@ export const MenuData =[
     },
     {
         title: "log in",
-        url: "#",
+        url: "login",
         cName: "nav-links-mobile",
     },
     {
         title: "sign up",
-        url: "#",
+        url: "register",
         cName: "nav-links-mobile",
     },
 ]
