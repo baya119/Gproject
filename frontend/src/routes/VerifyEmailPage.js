@@ -1,6 +1,6 @@
 import React from 'react'
 import "../componets/RegisterPage.css";
-import Footer1 from "../componets/Footer2";
+import Footer1 from "../componets/Footer1";
 
 import '../App'
 
