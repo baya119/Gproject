@@ -7,13 +7,10 @@ import Contact from "./routes/Contact";
 import LoginPage from "./routes/LoginPage";
 import RegisterPage from "./routes/RegisterPage";
 import ForgetPasswordPage from "./routes/ForgetPasswordPage";
-<<<<<<< HEAD
 import VerifyEmailPage from "./routes/VerifyEmailPage";
 import VerifyAccountPage from "./routes/VerifyAccountPage";
-=======
 import EmailVerification from "./routes/email_verification_sent";
 import EmailConfirmation from "./routes/email_confirmation";
->>>>>>> 36cc88f62a50b9995df3a05a825224e20b7bf2ca
 
 
 export default function App() {
