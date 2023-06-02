@@ -48,3 +48,13 @@
         width: 50%;
     }
 }
+.footer1{
+    margin-top: 14%;
+    padding: 5px 0rem 5px;
+    background: #000;
+    color: #fff;
+}
+.cp-text { 
+    color: rgba(255, 255, 255, 0.7); 
+    text-shadow: 0 1px rgba(255, 255, 255, 0.1);
+}
