@@ -7,6 +7,8 @@ import Contact from "./routes/Contact";
 import LoginPage from "./routes/LoginPage";
 import RegisterPage from "./routes/RegisterPage";
 import ForgetPasswordPage from "./routes/ForgetPasswordPage";
+import VerifyEmailPage from "./routes/VerifyEmailPage";
+import VerifyAccountPage from "./routes/VerifyAccountPage";
 
 
 export default function App() {
@@ -19,7 +21,8 @@ export default function App() {
     <Route path="/login" element={<LoginPage/>}/>
     <Route path="/register" element={<RegisterPage/>}/>
     <Route path="/forget-password" element={<ForgetPasswordPage/>}/>
-    ForgetPasswordPage
+    <Route path="/verifyemail" element={<VerifyEmailPage/>}/>
+    <Route path="/verifyacc" element={<VerifyAccountPage/>}/>
   </Routes>
     </div>
   );

@@ -31,7 +31,7 @@ export default function SignUpPage() {
                     <input type="checkbox" name="checkbox" id="checkbox" required /> <span>I agree all statements in <a href="https://google.com" target="_blank" rel="noopener noreferrer">terms of service</a></span>.
                 </p>
                 <p>
-                    <button id="sub_btn" type="submit">Register</button>
+                    <button id="sub_btn" type="submit"><Link to="/verifyemail">Register</Link></button>
                 </p>
             </form>
             <footer>
