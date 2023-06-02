@@ -8,6 +8,7 @@ import LoginPage from "./routes/LoginPage";
 import RegisterPage from "./routes/RegisterPage";
 import ForgetPasswordPage from "./routes/ForgetPasswordPage";
 import EmailVerification from "./routes/email_verification_sent";
+import EmailConfirmation from "./routes/email_confirmation";
 
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
     <Route path="/login" element={<LoginPage/>}/>
     <Route path="/success" element={<EmailVerification/>}/>
     <Route path="/register" element={<RegisterPage/>}/>
+    <Route path="/email_verification/:token" element={<EmailConfirmation/>}/>
     <Route path="/forget-password" element={<ForgetPasswordPage/>}/>
     ForgetPasswordPage
   </Routes>

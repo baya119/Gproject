@@ -27,4 +27,8 @@ class CustomAdapter(DefaultAccountAdapter):
             user.save()
         return user
 
+    def get_email_confirmation_url(self, request, emailconfirmation):
+        url = 'http://localhost:3000/email_verification/' + emailconfirmation.key
+        return url
+
 
