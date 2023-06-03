@@ -32,7 +32,7 @@ export default function CreateBids() {
     >
       <center>
         <p style={{ color: "white", fontWeight: "bold", fontSize: "30px" }}>
-          Verify Account
+          Create Bids
         </p>
       </center>
       <div
@@ -72,7 +72,7 @@ export default function CreateBids() {
             }}
             placeholder={"Submit file here"}
           />
-          <Button style={{ width: "125px", height: "40px" }}>Get Code</Button>
+          <Button style={{ width: "125px", height: "40px" }}>submit</Button>
         </div>
       </div>
       <Button style={{ padding: "5px 20px 5px 20px" }}>Verify</Button>

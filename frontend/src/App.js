@@ -19,6 +19,7 @@ import ChangePassword from "./routes/Setting/ChangePassword";
 import VerifyEmail from "./routes/Setting/VerifyEmail";
 import VerifyAccount from "./routes/Setting/VerifyAccount";
 import CreateBids from "./routes/Bids/CreateBids";
+import LoggedInNavBar from "./componets/LoggedInNavBar";
 
 export const UserContext = createContext(null);
 
@@ -60,6 +61,8 @@ export default function App() {
               <Route path={"/setting"} element={<Setting />} />,
               <Route path={"/faq"} element={<div>faq</div>} />,
               <Route path={"/bids"} element={<Bids />} />,
+              <Route path={"/sidebar-item-b"} element={<LoggedInNavBar />} />,
+              
               <Route
                 path={"/setting/change-password"}
                 element={<ChangePassword />}
@@ -77,6 +80,9 @@ export default function App() {
           <Route path={"/about"} element={<About />} />,
           <Route path={"/contact"} element={<Contact />} />,
           <Route path={"/*"} element={<ErrorPage />} />,
+          <Route path={"/register"} element={<RegisterPage />} />,
+          <Route path={"/home"} element={<Home />} />,
+          <Route path={"/login"} element={<LoginPage />} />,
         </Routes>
       </UserContext.Provider>
     </div>

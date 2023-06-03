@@ -13,7 +13,7 @@ function Home() {
         title="welcome to encharet"
         text="Ethiopia's the first online bidding platform"
         buttonText="sign up"
-        url="register"
+        url="/register"
         btnClass="show"
       />
       <Services />

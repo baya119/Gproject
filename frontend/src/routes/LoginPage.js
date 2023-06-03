@@ -32,7 +32,7 @@ export default function SignInPage() {
             type="submit"
             onClick={() => {
               setIsAuthenticated(true);
-              navigate("/", {replace: true});
+              navigate("sidebar-item-b", {replace: true});
             }}
           >
             Login
@@ -44,7 +44,7 @@ export default function SignInPage() {
           First time? <Link to="/register">Create an Account</Link>.
         </p>
         <p>
-          <Link to="/">Back to Homepage</Link>.
+          <Link to="/home">Back to Homepage</Link>.
         </p>
       </footer>
     </div>
