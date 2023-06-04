@@ -1,11 +1,16 @@
-import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState }  from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import "../componets/Login.css";
 
-import '../../src/App';
+
+import '../../src/App'
 import api from '../api';
+import { UserContext } from "../App";
 
 export default function SignInPage() {
+    const { user, setUser, isAuthenticated, setIsAuthenticated } = useContext(UserContext);
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -40,7 +45,7 @@ export default function SignInPage() {
     return (
         <div className="text-center m-5-auto">
             <h2>Sign in to us</h2>
-            <form onSubmit={handleSubmit}>
+            <form action="/home">
                 <p>
                     <label>Username or Email Address</label><br/>
                     <input type="text" name="first_name" required />

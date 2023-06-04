@@ -7,3 +7,12 @@
 .App {
   text-align: center;
 }
+
+.main-container{
+  width: 98vw;
+  display: flex;
+}
+
+.content{
+  background: #143458;
+}

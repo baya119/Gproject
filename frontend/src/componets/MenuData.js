@@ -2,7 +2,7 @@ export const MenuData =[
    
     {
         title: "log in",
-        url: "login",
+        url: "/login",
         cName: "nav-links-mobile",
     },
   

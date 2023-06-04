@@ -29,7 +29,7 @@ function Footer() {
             <div className="bottom">
                 <div>
                     <h4>encharet</h4>
-                    <a href="/">About Us</a>
+                    <a href="/home">About Us</a>
                     <a href="/">Servies</a>
                     <a href="/">Clients</a>
                     <a href="/">Testmonial</a>
