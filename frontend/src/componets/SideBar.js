@@ -9,23 +9,19 @@ const routes = [
     name: "Upcoming",
     path: "/upcoming",
   },
-  {
-    icon: "fa-user-circle",
-    name: "Profile",
-    path: "/profile",
-  },
+  
   {
     icon: "fa-calendar",
     name: "Ongoing",
     path: "/ongoing",
   },
   {
-    icon: "fa-calendar",
+    icon: "	fa fa-bell-slash",
     name: "Closed",
     path: "/closed",
   },
   {
-    icon: "fa-calendar",
+    icon: "fa-solid fa-money-bill",
     name: "Deposit",
     path: "/deposit",
   },
@@ -35,12 +31,17 @@ const routes = [
     path: "/withdrawal",
   },
   {
-    icon: "fa-calendar",
+    icon: "fa-user-circle",
+    name: "Profile",
+    path: "/profile",
+  },
+  {
+    icon: "fa fa-gear",
     name: "Setting",
     path: "/setting",
   },
   {
-    icon: "fa-calendar",
+    icon: "fa-question-circle",
     name: "FAQ",
     path: "/faq",
   },

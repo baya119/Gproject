@@ -28,35 +28,31 @@ function Footer() {
 
             <div className="bottom">
                 <div>
-                    <h4>encharet</h4>
+                    <h3>encharet</h3>
                     <a href="/home">About Us</a>
                     <a href="/">Servies</a>
-                    <a href="/">Clients</a>
                     <a href="/">Testmonial</a>
                     <a href="/">Terms & Conditions</a>
                     <a href="/">Privacy Policy</a>
                 </div>
                 <div>
-                    <h4>Community</h4>
-                    <a href="/">Github</a>
+                    <h3>Community</h3>
                     <a href="/">Issues</a>
-                    <a href="/">Project</a>
                     <a href="/">Blog</a>
                     <a href="/">Media Center</a>
                 </div>
                 <div>
-                    <h4>Quick links</h4>
-                    <a href="/">about PP</a>
+                    <h3>Quick links</h3>
                     <a href="/">E Tender</a>
                     <a href="/">E Procurement</a>
                     <a href="/">sitemap</a>
                     <a href="/">Tools</a>
                 </div>
                 <div>
-                    <h4>Help</h4>
+                    <h3>Help</h3>
                     <a href="/">Support</a>
-                    <a href="/">Troubleshootin</a>
-                    <a href="/">contact</a>
+                    <a href="/">Troubleshoot</a>
+                    <a href="/">Contact</a>
                 </div>
             </div>
         </div>

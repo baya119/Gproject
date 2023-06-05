@@ -31,7 +31,7 @@ export default function CreateBids() {
       style={{ marginTop: "10px", marginBottom: "30px" }}
     >
       <center>
-        <p style={{ color: "white", fontWeight: "bold", fontSize: "30px" }}>
+        <p style={{ color: "Black", fontWeight: "bold", fontSize: "40px", margin: "20px 0px 0px 0px" }}>
           Create Bids
         </p>
       </center>
@@ -64,15 +64,8 @@ export default function CreateBids() {
             alignItems: "center",
           }}
         >
-          <input
-            style={{
-              width: "100%",
-              height: "40px",
-              margin: "5px -20px 5px 20px",
-            }}
-            placeholder={"Submit file here"}
-          />
-          <Button style={{ width: "125px", height: "40px" }}>submit</Button>
+          <label for="myfile">Attach File </label>
+          <input type="file" class="btn" name="myfile" multiple></input>
         </div>
       </div>
       <Button style={{ padding: "5px 20px 5px 20px" }}>Verify</Button>

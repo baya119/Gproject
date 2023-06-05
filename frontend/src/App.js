@@ -6,6 +6,7 @@ import About from "./routes/About.js";
 import Contact from "./routes/Contact";
 import LoginPage from "./routes/LoginPage";
 import RegisterPage from "./routes/RegisterPage";
+import VerifyEmailPage from "./routes/VerifyEmailPage";
 import ForgetPasswordPage from "./routes/ForgetPasswordPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ErrorPage from "./routes/ErrorPage";
@@ -41,9 +42,7 @@ export default function App() {
             <Route path={"/"} element={<Home />} />,
             <Route path={"/register"} element={<RegisterPage />} />,
             <Route path={"/login"} element={<LoginPage />} />,
-            <Route
-              path={"/forgot-password"}
-              element={<ForgetPasswordPage />}
+            <Route path={"/forgot-password"} element={<ForgetPasswordPage />}
             />,
           ]}
           <Route
@@ -83,8 +82,11 @@ export default function App() {
           <Route path={"/register"} element={<RegisterPage />} />,
           <Route path={"/home"} element={<Home />} />,
           <Route path={"/login"} element={<LoginPage />} />,
+          <Route path={"/forget-password"} element={<ForgetPasswordPage />} />,
+          <Route path={"/verifyemail"} element={<VerifyEmailPage />} />,
         </Routes>
       </UserContext.Provider>
     </div>
+    
   );
 }
