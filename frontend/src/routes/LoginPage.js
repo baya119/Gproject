@@ -11,7 +11,7 @@ export default function SignInPage() {
   const navigate = useNavigate();
   return (
     <div className="text-center m-5-auto">
-      <h2>Sign in to us</h2>
+      <h2>Sign in </h2>
       <form action="/home">
         <p>
           <label>Username or Email Address</label>
@@ -35,7 +35,7 @@ export default function SignInPage() {
               navigate("sidebar-item-b", {replace: true});
             }}
           >
-            Login
+            <Link to="/up">Login</Link>
           </button>
         </p>
       </form>

@@ -10,7 +10,7 @@ export default function VerifyEmailPage() {
             <div className="text-center m-5-auto">
             <h2>Verify Email Address</h2>
             <h5>Enter your email address</h5>
-            <form action="/login">
+            <form action="/verifyemail">
                 <p>
                     <label id="reset_pass_lbl">Email address</label><br/>
                     <input type="email" name="email" required />

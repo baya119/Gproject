@@ -20,7 +20,7 @@ import VerifyEmail from "./routes/Setting/VerifyEmail";
 import VerifyAccount from "./routes/Setting/VerifyAccount";
 import CreateBids from "./routes/Bids/CreateBids";
 import LoggedInNavBar from "./componets/LoggedInNavBar";
-
+import VerifyEmailPage from "./routes/VerifyEmailPage";
 export const UserContext = createContext(null);
 
 export default function App() {
@@ -83,6 +83,8 @@ export default function App() {
           <Route path={"/register"} element={<RegisterPage />} />,
           <Route path={"/home"} element={<Home />} />,
           <Route path={"/login"} element={<LoginPage />} />,
+          <Route path={"/verifyemail"} element={<VerifyEmailPage />} />,
+          <Route path={"/up"} element={<Upcoming />} />,
         </Routes>
       </UserContext.Provider>
     </div>
