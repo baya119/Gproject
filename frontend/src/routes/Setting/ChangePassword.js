@@ -6,7 +6,7 @@ export default function ChangePassword() {
   return (
     <div className="text-center" style={{ marginTop: "10px" }}>
       <center>
-        <p style={{ color: "white", fontWeight: "bold", fontSize: "30px" }}>
+        <p style={{ color: "Black", fontWeight: "bold", fontSize: "40px", padding: "20px 0px 0px 0px",}}>
           Change Password
         </p>
       </center>
@@ -21,18 +21,21 @@ export default function ChangePassword() {
           alignItems: "center",
         }}
       >
-        <input
-          style={{ width: "50%", margin: "5px 20px 5px 20px" }}
-          placeholder={"old password"}
-        />
-        <input
-          style={{ width: "50%", margin: "5px 20px 5px 20px" }}
-          placeholder={"new password"}
-        />
-        <input
-          style={{ width: "50%", margin: "5px 20px 5px 20px" }}
-          placeholder={"confirm password"}
-        />
+        
+      <div class="input-group">
+			  <label for="oldpassword">Old Password</label>
+			  <input type="password" name="oldpassword" id="pass" placeholder=""></input>
+		  </div>
+      <br/>
+		  <div class="input-group">
+			  <label for="newpassword">New Password</label>
+			  <input type="password" name="password" id="password" placeholder=""></input>
+			</div>
+      <br/>
+      <div class="input-group">
+        <label for="newpassword">Confirm Password</label>
+			  <input type="password" name="password" id="password" placeholder=""></input>
+			</div>
       </div>
       <Button style={{ padding: "5px 20px 5px 20px" }}>Change</Button>
     </div>

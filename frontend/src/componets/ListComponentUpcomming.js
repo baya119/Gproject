@@ -10,10 +10,10 @@ class ListItem extends Component {
     return (
       <div
         style={{
-          padding: "25px",
+          padding: "5px 0px 0px 0px",
           width: "100%",
-          height: "200px",
-          background: "darkcyan",
+          height: "250px",
+          background: "#111827",
           borderRadius: "10px",
           display: "flex",
           justifyContent: "start",
@@ -51,7 +51,7 @@ class ListItem extends Component {
             </div>
           </div>
           <Link to={`detail/${this.props.data.id}`}>
-            <Button>View Detail</Button>
+            <Button>View Details</Button>
           </Link>
         </div>
       </div>
