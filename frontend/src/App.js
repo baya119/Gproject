@@ -20,6 +20,7 @@ import VerifyEmail from "./routes/Setting/VerifyEmail";
 import VerifyAccount from "./routes/Setting/VerifyAccount";
 import CreateBids from "./routes/Bids/CreateBids";
 import LoggedInNavBar from "./componets/LoggedInNavBar";
+import EmailVerification from "./routes/email_verification_sent"
 
 export const UserContext = createContext(null);
 
@@ -51,6 +52,7 @@ export default function App() {
             element={<ProtectedRoute component={Base} />}
             children={[
               <Route path={"/"} element={<div></div>} />,
+              <Route path={"/success"} element={<EmailVerification />} />,
               <Route path={"/upcoming"} element={<Upcoming />} />,
               <Route path={"/upcoming/create-bid"} element={<CreateBids />} />,
               <Route path={"/profile"} element={<div>Profile</div>} />,

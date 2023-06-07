@@ -1,16 +1,13 @@
-import React, { useContext, useState }  from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState }  from 'react'
+import { Link } from 'react-router-dom'
 import "../componets/Login.css";
 
 
 import '../../src/App'
 import api from '../api';
-import { UserContext } from "../App";
 
 export default function SignInPage() {
-    const { user, setUser, isAuthenticated, setIsAuthenticated } = useContext(UserContext);
-    const navigate = useNavigate();
-
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -31,7 +28,8 @@ export default function SignInPage() {
           .then((response) => {
             const token = response.data.token;
             localStorage.setItem('authToken', token);
-            window.location.href = '/bids';
+            api.defaults.headers['Authorization'] = localStorage.getItem('authToken');
+            window.location.href = '/ongoing';
           })
           .catch(error => {
             if (error.response && error.response.status === 400) {
@@ -45,7 +43,7 @@ export default function SignInPage() {
     return (
         <div className="text-center m-5-auto">
             <h2>Sign in to us</h2>
-            <form action="/home">
+            <form onSubmit={handleSubmit}>
                 <p>
                     <label>Username or Email Address</label><br/>
                     <input type="text" name="first_name" required />
