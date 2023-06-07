@@ -1,4 +1,4 @@
-import ListComponent from "../componets/ListComponent";
+import ListComponent from "../componets/ListComponentOngoing";
 
 const items = [
   {
@@ -55,9 +55,9 @@ const items = [
 function Ongoing() {
   
   return (
-    <div style={{ marginTop: "10px" }}>
+    <div style={{ marginTop: "30px" }}>
       <center>
-        <p style={{ color: "white", fontWeight: "bold", fontSize: "30px" }}>
+      <p style={{ color: "Black", fontWeight: "bold", fontSize: "40px", padding: "20px 0px 0px 0px", }}>
           Ongoing
         </p>
       </center>

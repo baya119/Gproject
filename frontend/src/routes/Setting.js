@@ -10,7 +10,7 @@ function Setting() {
           width: "45%",
           height: "125px",
           margin: "10px",
-          background: "#7367F0",
+          background: "#111827",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -35,7 +35,7 @@ function Setting() {
   return (
     <div style={{ marginTop: "10px" }}>
       <center>
-        <p style={{ color: "white", fontWeight: "bold", fontSize: "30px" }}>
+        <p style={{ color: "black", fontWeight: "bold", fontSize: "40px" }}>
           Setting
         </p>
       </center>
@@ -51,8 +51,7 @@ function Setting() {
         }}
       >
         {ButtonB("fas fa-key", "Change Password", "change-password")}
-        {ButtonB("fas fa-key", "Verify Email Address", "verify-email")}
-        {ButtonB("fas fa-key", "Verify Account", "verify-account")}
+        {ButtonB("fas fa-check", "Verify Email Address", "/verifyemail")}
       </div>
     </div>
   );

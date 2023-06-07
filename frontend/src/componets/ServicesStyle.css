@@ -1,69 +1,61 @@
 .service {
-    margin: 2rem 4.5rem;
-}
-
-.service h1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+  }
+  
+  /* H1 Title */
+  .service h1 {
     font-size: 2.5rem;
-}
-.first-ser{
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #343a40;
+    margin-bottom: 1rem;
+  }
+  
+  /* Paragraph Text */
+  .service p {
+    font-size: 1.2rem;
+    text-align: center;
+    width: 80%;
+    color: #6c757d;
+    margin-bottom: 3rem;
+  }
+  
+  /* Services Data */
+  .first-ser,
+  .first-ser-reverse {
     display: flex;
-    align-items: center;
+    width: 100%;
     justify-content: space-between;
-    margin-top: 4rem;
-}
-.first-ser-reverse{
-    display: flex;
-    flex-direction: row-reverse;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 4rem;
-}
-
-.ser-text{
-    width: 45%;
-    text-align: start;
-    font-size: 1.3rem;
-}
-.ser-text h2{
-    padding-bottom: 1rem;
-}
-.image{
-    position: relative;
-    z-index: -99;
+    margin-bottom: 2rem;
+    padding: 1rem;
+  }
+  
+  .first-ser img,
+  .first-ser-reverse img {
+    width: 40%;
+    height: auto;
+  }
+  
+  .first-ser .heading,
+  .first-ser-reverse .heading {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: #343a40;
+    margin-bottom: 1rem;
+  }
+  
+  .first-ser .text,
+  .first-ser-reverse .text {
+    font-size: 1rem;
     width: 50%;
-}
-.image img{
-    height: 350px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: -1px 1px 62px -18px rgba(0, 0, 0, 0.19);
-}
-@media screen and (max-width: 850px){
-    .service {
-        margin: 4rem 2rem;
-    }
-    .first-ser{
-        display: flex;
-        flex-direction: column-reverse;
-        margin-top: 2.5rem;
-
-    }
-    .first-ser-reverse{
-        display: flex;
-        flex-direction: column-reverse;
-        margin-top: 2.5rem;
-
-    }
-    .ser-text{
-        width: 100%;
-        
-    }
-    .image{
-        width: 100%;
-        margin: 1.8rem 0;
-
-    }
-    .image img{
-        height: 250px;
-    }
-}
+    color: #6c757d;
+  }
+  
+  .first-ser-reverse {
+    flex-direction: row-reverse;
+  }
