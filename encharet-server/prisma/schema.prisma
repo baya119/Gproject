@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model user {
+  id            Int            @id @default(autoincrement())
+  fname         String
+  lname         String
+  email         String
+  phonenumber   String
+  password      String
+  balance       Float
+  registered_at DateTime
+  Bids          bid[]
+  Organizations organization[]
+  Applications  application[]
+  Payments      payment[]
+  Notifications notification[]
+}
+
+model organization {
+  id            Int              @id @default(autoincrement())
+  name          String
+  type          OrganizationType
+  tin_number    String
+  location      String
+  user_id       Int
+  registered_at DateTime
+  User          user             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model bid {
+  id           Int           @id @default(autoincrement())
+  user_id      Int
+  cpo_amount   Float
+  created_at   DateTime
+  deadline     DateTime
+  title        String
+  description  String
+  fee          Float
+  status       BidStatus
+  User         user          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  BidFiles     bidFiles[]
+  Applications application[]
+  Payments     payment[]
+}
+
+model bidFiles {
+  id       Int    @id @default(autoincrement())
+  bid_id   Int
+  file_url String
+  Bid      bid    @relation(fields: [bid_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model application {
+  id         Int                   @id @default(autoincrement())
+  file_url   String
+  user_id    Int
+  bid_id     Int
+  created_at DateTime
+  status     ApplicationStatusType @default(PENDING)
+  User       user                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Bid        bid                   @relation(fields: [bid_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model payment {
+  id      Int           @id @default(autoincrement())
+  user_id Int
+  bid_id  Int?
+  amount  Float
+  paid_at DateTime
+  status  PaymentStatus
+  User    user          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Bid     bid?          @relation(fields: [bid_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model notification {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  message    String
+  created_at DateTime
+  User       user     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+enum BidStatus {
+  PENDING
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+}
+
+enum OrganizationType {
+  GOVERNMENTAL
+  PRIVATE
+}
+
+enum ApplicationStatusType {
+  ACCEPTED
+  REJECTED
+  PENDING
+}
