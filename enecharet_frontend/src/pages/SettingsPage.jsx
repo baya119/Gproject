@@ -3,19 +3,21 @@ import { Button, Modal, Label, TextInput, Select, Spinner } from 'flowbite-react
 import { BsFillCheckCircleFill, BsFillXOctagonFill } from "react-icons/bs";
 import axios from 'axios';
 import { BASE_URL } from "../util/Constants";
+import { useNavigate } from "react-router-dom";
 
 const SettingsPage = () => {
     const initialValues = {
-        orgName: "",
-        tinNumber: "", //change this to a number if needed
-        type: "PRIVATE", //initially Private
-        location: "",
+        name: '',
+        tin_number: '',
+        type: 'GOVERNMENTAL',
+        location: ''
     };
     const [formValues, setFormValues] = useState(initialValues);
     const [isLoading, setIsLoading] = useState(false);
     const [result, setResult] = useState({});
     const [showDialog, setShowDialog] = useState(false);
     const [displayVerify, setDisplayVerify] = useState(false);
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { value } = e.target;
@@ -24,7 +26,6 @@ const SettingsPage = () => {
             ...formValues,
             [e.target.id]: value,
         });
-
         console.log(formValues);
     };
 
@@ -38,8 +39,8 @@ const SettingsPage = () => {
         setIsLoading(true);
 
         const submitData = {
-            name: formValues.orgName,
-            tin_number: formValues.tinNumber, //change this to a number if needed
+            name: formValues.name,
+            tin_number: formValues.tin_number, //change this to a number if needed
             type: formValues.type, //initially Private
             location: formValues.location,
         };
@@ -66,8 +67,9 @@ const SettingsPage = () => {
             .then((response) => {
                 console.log(response);
                 setResult(response.status);
+                localStorage.clear();
                 setIsLoading(false);
-                setShowDialog(false);
+                navigate("/signIn")
             })
             .catch((error) => {
                 console.log(error);
@@ -118,24 +120,25 @@ const SettingsPage = () => {
                                             <Label htmlFor="orgName" value="Organization Name" />
                                         </div>
                                         <TextInput
-                                            id="orgName"
+                                            id="name"
                                             type="text"
+                                            key="name"
                                             placeholder="Please input your Organization name here"
                                             required={true}
-                                            value={formValues.orgName}
-                                            onChange={handleInputChange}
-                                        />
+                                            value={formValues.name}
+                                            onChange={handleInputChange}                                      />
                                     </div>
                                     <div>
                                         <div className="mb-2 block">
                                             <Label htmlFor="tinNumber" value="TIN Number" />
                                         </div>
                                         <TextInput
-                                            id="tinNumber"
+                                            id="tin_number"
                                             type="text"
+                                            key="tin_number"
                                             placeholder="Please input your TIN number here"
                                             required={true}
-                                            value={formValues.tinNumber}
+                                            value={formValues.tin_number}
                                             onChange={handleInputChange}
                                         />
                                     </div>
@@ -151,12 +154,10 @@ const SettingsPage = () => {
                                             <Select
                                                 id="type"
                                                 required={true}
-                                                // value={formValues.}
-                                                onChange={(e) =>
-                                                    setFormValues({ ...formValues, type: e.target.value })
-                                                }
-                                            >
-                                                <option value="GOVENMENTAL">GOVERNMENTAL</option>
+                                                key="type"
+                                                value={formValues.type}
+                                                onChange={handleInputChange}                                          >
+                                                <option value="GOVERNMENTAL">GOVERNMENTAL</option>
                                                 <option value="PRIVATE">PRIVATE</option>
                                             </Select>
                                         </div>
@@ -169,6 +170,7 @@ const SettingsPage = () => {
                                         <TextInput
                                             id="location"
                                             type="text"
+                                            key="location"
                                             placeholder="Please input your location here "
                                             required={true}
                                             value={formValues.location}
