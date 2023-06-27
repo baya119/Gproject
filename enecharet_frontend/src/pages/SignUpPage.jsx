@@ -77,8 +77,9 @@ const SignUpPage = () => {
                     catch(err => {
                         console.log(err);
                         setIsLoading(false);
-                        setResult(err.response.status);
-                        setShowDialog(true);
+                        alert(err.response.data.message);
+                        // setResult(err.response.status);
+                        // setShowDialog(true);
                     })
             }
         }

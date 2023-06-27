@@ -49,7 +49,8 @@ const SignInPage = () => {
         catch(err => {
           setIsLoading(false);
           setResult(err.response.status);
-          setShowDialog(true);
+          alert(err.response.data.message);
+          // setShowDialog(true);
         })
     }
   });

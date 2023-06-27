@@ -91,8 +91,7 @@ const BidDetailPage = () => {
           files: null,
         });
         alert(
-          err.response.data.message +
-            ", please deposit enough amount of money in your acount"
+          err.response.data.message
         );
         setdisplayModal(false);
         // showDialog(true);

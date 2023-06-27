@@ -602,7 +602,7 @@ userControllers.getBidById = async (req, res) => {
       }
     });
 
-    if (payment.length == 0 && id !== bid[0].user_id) {
+    if (payment.length == 0) {
      if(balance < bid[0].fee){
       return res.status(401).send({
         status: 401,
@@ -634,10 +634,11 @@ userControllers.getBidById = async (req, res) => {
     }else if(id === bid[0].user_id){
       res.json(bid); 
     }else {
-      return res.status(401).send({
-        status: 401,
-        message: "You already applied to the bid please wait for response from the organization!!",
-      });
+      res.json(bid); 
+      // return res.status(401).send({
+      //   status: 401,
+      //   message: "You already applied to the bid please wait for response from the organization!!",
+      // });
     }
   } catch (error) {
     console.log(error);
