@@ -34,12 +34,9 @@ const validationSchema = yup.object({
         .required('Last name is required'),
     phonenumber: yup
         .string('Enter your phone number')
-        .matches(/^(09|07|\+2519|\+2517)\d{8}$/, 'Invalid phone number')
         .required('phonenumber required'),
     cpassword: yup
         .string('Confirm your password')
-        .min(6, 'Password should be of minimum 8 characters length')
-        .max(16, 'Password should be of maximum 16 characters length')
         .required('Confirm password is required')
 });
 
@@ -73,16 +70,15 @@ const SignUpPage = () => {
                         localStorage.clear();
                         localStorage.setItem("user", JSON.stringify(response.data.user));
                         localStorage.setItem("token", response.data.token);
-                        setResult(response.status);
+                        localStorage.setItem("role", "user");
+                        setResult(response);
                         setShowDialog(true);
-                        //navigate("/");
                     }).
                     catch(err => {
                         console.log(err);
                         setIsLoading(false);
-                        alert(err.response.data.message);
-                        // setResult(err.response.status);
-                        // setShowDialog(true);
+                        setResult(err.response);
+                        setShowDialog(true);
                     })
             }
         }
@@ -90,9 +86,9 @@ const SignUpPage = () => {
 
     const onClose = () => {
         setShowDialog(false);
-        if (parseInt(result) < 400) {
+        if (result.status < 400) {
             console.log(parseInt(result.status));
-            navigate("/signIn");
+            navigate("/verifyAccount");
         }
     };
 
@@ -107,7 +103,7 @@ const SignUpPage = () => {
                 <Modal.Header />
                 <Modal.Body>
                     <div className="text-center">
-                        {result.status < 400  ? (
+                        {result.status < 400 ? (
                             <div>
                                 <BsFillCheckCircleFill className="mx-auto mb-4 h-14 w-14 text-gray-600 " />
                                 <h3 className="mb-5 text-lg font-normal text-gray-600 ">
@@ -118,7 +114,7 @@ const SignUpPage = () => {
                             <div>
                                 <BsFillXOctagonFill className="mx-auto mb-4 h-14 w-14 text-gray-600 " />
                                 <h3 className="mb-5 text-lg font-normal text-gray-600 ">
-                                    {result > 400 ? ("Error") : ("Success!")}
+                                    Error!
                                 </h3>
                             </div>
                         )}
@@ -256,6 +252,13 @@ const SignUpPage = () => {
                                     className="font-medium text-blue-600 hover:underline"
                                 >
                                     Sign In
+                                </a>
+                                {" "} or {" "}
+                                <a
+                                    href="/forgotPassword"
+                                    className="font-medium text-blue-600 hover:underline"
+                                >
+                                    Forgot Password
                                 </a>
                             </p>
                         </div>

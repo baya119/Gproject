@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, Label, Button, Modal, Spinner } from 'flowbite-react';
+import { TextInput, Label, Button, Modal, Spinner, Select } from 'flowbite-react';
 import { BsFillCheckCircleFill, BsFillXOctagonFill } from "react-icons/bs";
 import Lottie from "lottie-react";
 import errorLottieAnimation from "../assets/error_lottie.json";
@@ -18,7 +18,8 @@ const CreateBidPage = () => {
         fee: 0,
         title: '',
         files: null,
-        deadline: ''
+        deadline: '',
+        tag: 'Construction'
     };
     const [formValues, setFormValues] = useState(initialValues);
     const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +60,7 @@ const CreateBidPage = () => {
         data.append('title', formValues.title);
         data.append('files', formValues.files);
         data.append('deadline', formValues.deadline);
+        data.append('tag', formValues.tag);
 
         let headers = {
             'Content-Type': 'multipart/form-data',
@@ -69,23 +71,28 @@ const CreateBidPage = () => {
             .then(response => {
                 console.log(response.data);
                 setIsLoading(false);
-                setResult(response.status);
+                setResult(response);
                 setShowDialog(true);
             })
             .catch(error => {
                 setIsLoading(false);
                 console.log(error);
-                setResult(error.response.status);
+                setResult(error.response);
                 setShowDialog(true);
             });
     };
 
 
     const onClose = (e) => {
-        setResult({});
-        setFormValues(initialValues);
+        if (result.status < 400) {
+            setResult({});
+            setFormValues(initialValues);
+        }
         setShowDialog(false);
     };
+
+    let tmrw = new Date();
+    tmrw.setDate(tmrw.getDate() + 1);
 
     if (userData.Organizations.length == 0) {
         return (
@@ -96,7 +103,7 @@ const CreateBidPage = () => {
                     </div>
 
                     <p className="text-xl text-gray-700 text-center">
-                        Oops! seems like your didn't verify your account {" "}
+                        Oops! seems like your didn't have any Organizations in your account {" "}
                         <a
                             href="/profile/setting"
                             className="font-medium text-blue-600 hover:underline"
@@ -133,7 +140,7 @@ const CreateBidPage = () => {
                             <div>
                                 <BsFillXOctagonFill className="mx-auto mb-4 h-14 w-14 text-gray-600 " />
                                 <h3 className="mb-5 text-lg font-normal text-gray-600 ">
-                                    {result > 400 ? ("Error") : ("Success!")}
+                                    Error!
                                 </h3>
                             </div>
                         )}
@@ -209,6 +216,31 @@ const CreateBidPage = () => {
                             />
                         </div>
 
+                        <div>
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label
+                                        htmlFor="tag"
+                                        value="Select tag"
+                                    />
+                                </div>
+                                <Select
+                                    id="tag"
+                                    required={true}
+                                    defaultValue={formValues.tag}
+                                    onBlur={(e) =>
+                                        setFormValues({ ...formValues, tag: e.target.value })
+                                    }
+                                >
+                                    <option value="Construction">Construction</option>
+                                    <option value="Automotive">Automotive</option>
+                                    <option value="Accounting">Accounting</option>
+                                    <option value="ITandNetWorking">IT and NetWorking</option>
+                                    <option value="Consultancy">Consultancy</option>
+                                </Select>
+                            </div>
+                        </div>
+
                         <div className="my-4">
                             <div className="mb-2 block">
                                 <Label htmlFor="deadline" value="Deadline" />
@@ -217,6 +249,7 @@ const CreateBidPage = () => {
                                 <input
                                     id="deadline"
                                     type="date"
+                                    min={tmrw.toISOString().split('T')[0]}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                     placeholder="Select date"
                                     value={formValues.deadline}

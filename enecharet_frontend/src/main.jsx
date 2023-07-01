@@ -14,7 +14,11 @@ import BidsPage from './pages/BidsPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundErrorPage from './pages/NotFoundErrorPage';
 import BidDetailPage from './pages/BidDetailPage';
-import { PaymentSuccess } from './pages/PaymentSucess';
+import AdminPage from './pages/AdminPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import PaymentSucess from './pages/PaymentSucess';
+import ForgotPassword from './pages/ForgotPassword';
+import VerifyAccuntPage from './pages/VerifyAccuntPage';
 
 const router = createBrowserRouter([
   {
@@ -38,27 +42,45 @@ const router = createBrowserRouter([
         element: <BidsPage />
       },
       {
+        path: "/profile/bid-detail/:bidId",
+        element: <BidDetailPage />
+      },
+      {
         path: "/profile/*",
         element: <ProfilePage />,
       },
       {
-        path: "/sucess",
-        element: <PaymentSuccess />,
+        path: "/success",
+        element: <PaymentSucess />,
       },
       {
         path: "/bid-detail/:bidId",
         element: <BidDetailPage />
       },
       {
+        path: "/admin",
+        element: <AdminPage />
+      },
+      {
+        path: "/adminLogin",
+        element: <AdminLoginPage />
+      },
+      {
+        path: "/verifyAccount",
+        element: <VerifyAccuntPage />
+      },
+      {
         path: "*",
         element: <NotFoundErrorPage />
+      },
+      {
+        path: "/forgotPassword",
+        element: <ForgotPassword />
       }
     ]
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
 )

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput, Button, Spinner } from 'flowbite-react';
-import { useNavigate, useParams } from "react-router-dom";
 import { DepositsItemComponent } from '../components/DepositsItemComponent';
 import { BASE_URL } from '../util/Constants';
 import axios from 'axios';
@@ -11,7 +10,6 @@ const DepositPage = () => {
   const [amount, setAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
-
 
   useEffect(() => {
     setIsLoading(false);
@@ -41,6 +39,21 @@ const DepositPage = () => {
     fetchData();
   }, []);
 
+/*   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(BASE_URL + '/payments');
+        setData(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+ */
+
   const handleAmountInput = (e) => {
     setAmount(e.target.value);
   };
@@ -48,13 +61,11 @@ const DepositPage = () => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
 
-    const { id } = user;
-
-    console.log(id);
+    console.log(amount);
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: BASE_URL + `/api/deposit?id=${id}&amount=${amount}`,
+      url: BASE_URL + `/api/deposit?amount=${amount}`,
       headers: {
         'x-auth-token': token
       }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Spinner, Sidebar } from 'flowbite-react';
 import { BsPersonCircle, BsPiggyBank, BsXCircle, BsArrowLeftCircle, BsFillQuestionCircleFill } from 'react-icons/bs';
 import { FiSettings } from 'react-icons/fi';
-import { BiLogOut, BiAddToQueue } from 'react-icons/bi';
+import { BiLogOut, BiAddToQueue, BiSolidUserAccount, BiMoney } from 'react-icons/bi';
 import { IoIosNotifications } from "react-icons/io";
 import UserProfilePage from './UserProfilePage';
 import ClosedPage from './ClosedPage';
@@ -14,6 +14,8 @@ import FrequentlyAskedQuestionsPage from './FrequentlyAskedQuestionsPage';
 import LogoutPage from './LogoutPage';
 import CreateBidPage from './CreateBidPage';
 import NotificationPage from './NotificationPage';
+import NotFoundErrorPage from './NotFoundErrorPage';
+import YourBidsPage from './YourBidsPage';
 
 const ProfilePage = () => {
   const [route, setRoute] = useState("/");
@@ -26,6 +28,9 @@ const ProfilePage = () => {
     console.log(window.location.pathname);
   }, []);
 
+  if (!userData || userData.status != "ACTIVE") {
+    return <NotFoundErrorPage />;
+  }
 
   const ContentComponent = () => {
     switch (route) {
@@ -42,11 +47,15 @@ const ProfilePage = () => {
       case "/profile/setting":
         return <SettingsPage />;
       case "/profile/notifications":
-        return <NotificationPage/> ;
+        return <NotificationPage />;
       case "/profile/logout":
         return <LogoutPage />;
       case "/profile/createbid":
-        return <CreateBidPage />
+        return <CreateBidPage />;
+      case "/profile/yourbids":
+        return <YourBidsPage />
+      case "/profile/withdrawals":
+        return <WithDrawalPage />
       default:
         return <UserProfilePage />;
     }
@@ -61,7 +70,7 @@ const ProfilePage = () => {
               <Sidebar.ItemGroup>
                 <div className="flex flex-row justify-center">
                   <img
-                    className="h-24 w-24 rounded-full shadow-lg"
+                    className="h-20 w-20 rounded-full"
                     src={"/images/image_placeholder.jpg"}
                     alt="Image"
                   />
@@ -86,6 +95,14 @@ const ProfilePage = () => {
                   </p>
                 </Sidebar.Item>
                 <Sidebar.Item
+                  href="/profile/withdrawals"
+                  icon={BiMoney}
+                >
+                  <p>
+                    WithDrawals
+                  </p>
+                </Sidebar.Item>
+                <Sidebar.Item
                   href="/profile/createbid"
                   icon={BiAddToQueue}
                 >
@@ -98,14 +115,22 @@ const ProfilePage = () => {
                   icon={FiSettings}
                 >
                   <p>
-                    Verify Account
+                    Settings
+                  </p>
+                </Sidebar.Item>
+                <Sidebar.Item
+                  href="/profile/yourbids"
+                  icon={BiSolidUserAccount}
+                >
+                  <p>
+                    Your Bids
                   </p>
                 </Sidebar.Item>
                 <Sidebar.Item
                   href="/profile/notifications"
                   icon={IoIosNotifications}
                 >
-                   <p>
+                  <p>
                     Notifications
                   </p>
                 </Sidebar.Item>

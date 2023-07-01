@@ -1,56 +1,44 @@
 import React, { useEffect, useState } from "react";
-import {
-    Label,
-    TextInput,
-    Button,
-    Spinner,
-    Modal,
-    Card
-} from "flowbite-react";
+import { Label, TextInput, Button, Spinner, Modal, Card, Tabs } from "flowbite-react";
 import axios from "axios";
 import { BASE_URL } from "../util/Constants";
 import { BidItemComponent } from "../components/BidItemComponent";
+import NotFoundErrorPage from "./NotFoundErrorPage";
 
 const UserProfilePage = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     const handleInputChange = (e) => { };
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState({});
 
     if (!token) {
-        return (<div>UnAuthorized!</div>);
+        return <NotFoundErrorPage />;
     }
 
     useEffect(() => {
         let config = {
-            method: 'get',
+            method: "get",
             maxBodyLength: Infinity,
-            url: BASE_URL + '/api/profile',
+            url: BASE_URL + "/api/profile",
             headers: {
-                'x-auth-token': token
-            }
+                "x-auth-token": token,
+            },
         };
 
-        axios.request(config)
-            .then(response => {
-                console.log(response.data)
+        axios
+            .request(config)
+            .then((response) => {
+                console.log(response.data);
                 setIsLoading(false);
                 setUser(response.data[0]);
-            }).catch(err => {
+                localStorage.setItem('user', JSON.stringify(response.data[0]));
+            })
+            .catch((err) => {
                 setIsLoading(false);
-                alert(err.response.data.message)
+                alert(err.response.data.message);
             });
     }, []);
-
-    const bids = !user.Bids ? [] : user.Bids.map((bid, i) => {
-        let url = "/bid?id=" + bid.id;
-        return (
-            <a href={url} key={i}>
-                <Card title={bid.title} description={bid.description} fee={bid.fee} cpo={bid.fee} date={bid.created_at} />
-            </a>
-        )
-    });
 
     return (
         <div>
@@ -81,7 +69,7 @@ const UserProfilePage = () => {
 
                                 <div>
                                     <div className="mb-2 block my-4">
-                                        <Label htmlFor="lname" value="Last Name" />
+                                        <Label htmlFor="lastName" value="LastName" />
                                     </div>
                                     <TextInput
                                         id="lastName"
@@ -126,41 +114,33 @@ const UserProfilePage = () => {
 
                                 <div>
                                     <div className="mb-2 block my-4">
-                                        <Label htmlFor="balance" value="Balance" />
+                                        <Label htmlFor="status" value="Account status" />
                                     </div>
                                     <TextInput
-                                        id="balance"
+                                        id="status"
                                         type="text"
                                         disabled={true}
-                                        placeholder="Please input your PhoneNumber here "
-                                        value={user.balance}
+                                        placeholder="Please input your Status here "
+                                        value={user.status}
                                         onChange={handleInputChange}
                                         required={true}
                                     />
                                 </div>
 
-                                {/* <div>
-                                    <div className="mb-2 block my-4">
-                                        <Label htmlFor="companyName" value="CompanyName" />
-                                    </div>
-                                    <TextInput
-                                        id="companyName"
-                                        type="text"
-                                        disabled={true}
-                                        placeholder="Please input your CompanyName here "
-                                        value={user.email}
-                                        onChange={handleInputChange}
-                                        required={true}
-                                    />
-                                </div> */}
-
-                                <p className="text-2xl text-center text-gray-700 my-10">Your Organization</p>
+                                {user.Organizations.length > 0 && (
+                                    <p className="text-2xl text-center text-gray-700 my-10">
+                                        Your Organization
+                                    </p>
+                                )}
 
                                 {user.Organizations.length > 0 && (
                                     <div>
                                         <div>
                                             <div className="mb-2 block my-4">
-                                                <Label htmlFor="organizationName" value="Organization Name" />
+                                                <Label
+                                                    htmlFor="organizationName"
+                                                    value="Organization Name"
+                                                />
                                             </div>
                                             <TextInput
                                                 id="organizationName"
@@ -220,17 +200,37 @@ const UserProfilePage = () => {
                                     </div>
                                 )}
 
-                                <p className="text-2xl text-center text-gray-700 my-10">Bids</p>
+                                <p className="text-2xl text-center text-gray-700 my-10">
+                                    Your Holdings
+                                </p>
 
-                                {user.Bids.length > 0 && (
-                                    <div>
-                                        {user.Bids.map((bidItem) => {
-                                            return (
-                                                <BidItemComponent bid={bidItem} />
-                                            )
-                                        })}
-                                    </div>
-                                )}
+
+                                <div className="flex flex-row gap-2 my-10">
+                                    <Card className="hover:shadow-lg rounded-lg w-1/3">
+                                        <div className="flex justify-center items-baseline mb-2">
+                                            <span className="mr-2 text-3xl font-bold text-gray-600">{user.cpo_holded ? user.cpo_holded : 0}</span>
+                                        </div>
+                                        <p className="font-light text-gray-500 text-center sm:text-lg">
+                                            CPO holded
+                                        </p>
+                                    </Card>
+                                    <Card className="hover:shadow-lg w-1/3">
+                                        <div className="flex justify-center items-baseline mb-2">
+                                            <span className="mr-2 text-3xl font-bold text-gray-600">{user.total_fee ? user.total_fee : 0}</span>
+                                        </div>
+                                        <p className="font-light text-gray-500 text-center sm:text-lg">
+                                            Total Fee
+                                        </p>
+                                    </Card>
+                                    <Card className="hover:shadow-lg w-1/3">
+                                        <div className="flex justify-center items-baseline mb-2">
+                                            <span className="mr-2 text-3xl font-bold text-gray-600">{user.active_balance ? user.active_balance : 0 }</span>
+                                        </div>
+                                        <p className="font-light text-gray-500 text-center sm:text-lg">
+                                            Active Balance
+                                        </p>
+                                    </Card>
+                                </div>
                             </div>
                         )}
                     </form>
@@ -238,6 +238,6 @@ const UserProfilePage = () => {
             </div>
         </div>
     );
-}
+};
 
-export default UserProfilePage
+export default UserProfilePage;

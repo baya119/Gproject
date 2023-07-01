@@ -1,8 +1,6 @@
 import React from 'react';
 import { Label, TextInput } from 'flowbite-react';
 
-
-
 export const OrganizationItemComponent = (props) => {
     return (
         <div>

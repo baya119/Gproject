@@ -1,13 +1,23 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const axios = require("axios");
+const nodemailer = require('nodemailer');
 require("dotenv").config();
 
 const prisma = new PrismaClient();
 const userControllers = {};
-const CHAPA_URL = process.env.CHAPA_URL;
-const CHAPA_AUTH = process.env.CHAPA_AUTH;
+const app_pwd = process.env.APP_PASSWORD;
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'hexsnwhite@gmail.com',
+    pass: app_pwd
+  }
+});
+
+
+const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 
 userControllers.signup = async (req, res) => {
   const { fname, lname, email, phonenumber, password } = req.body;
@@ -41,7 +51,9 @@ userControllers.signup = async (req, res) => {
           lname,
           email,
           password: pwd,
-          balance: 0,
+          active_balance: 0,
+          cpo_holded: 0,
+          total_fee: 0,
           phonenumber,
           registered_at: new Date(),
         },
@@ -55,6 +67,35 @@ userControllers.signup = async (req, res) => {
 
       const token = jwt.sign({ newUser }, process.env.JWT_SECRET, {
         expiresIn: "1d",
+      });
+
+      const date = new Date();
+
+      date.setMinutes(date.getMinutes() + 30);
+      const verification = await prisma.verification.create({
+        data: {
+          user_id: newUser.id,
+          code: genRanHex(6),
+          expires_at: date
+        }
+      })
+
+      // sending email with emailjs
+
+      const mailOptions = {
+        from: 'hexsnwhite@gmail.com',
+        to: newUser.email,
+        subject: 'Verification code',
+        text: `Dear ${newUser.fname} ${newUser.lname} to verify account please enter this code ${verification.code}`
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+       console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+          // do something useful
+        }
       });
 
       res.status(200).json({
@@ -126,6 +167,7 @@ userControllers.login = async (req, res) => {
 userControllers.getProfile = async (req, res) => {
   const { id } = req.user;
 
+
   try {
     const user = await prisma.user.findMany({
       where: {
@@ -151,7 +193,7 @@ userControllers.getProfile = async (req, res) => {
 };
 
 userControllers.createOrganization = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.user.newUser ? req.user.newUser : req.user;
 
   const { name, tin_number, type, location } = req.body;
 
@@ -198,479 +240,10 @@ userControllers.createOrganization = async (req, res) => {
   }
 };
 
-userControllers.createBid = async (req, res) => {
-  const files  = req.files;
-  const { id } = req.user;
-  const { cpo_amount, title, description, fee, deadline } = req.body;
-
-  if (!files) {
-    return res.status(401).send({
-      status: 401,
-      message: "Please upload supporting documents!!",
-    });
-  }
-
-  if (!cpo_amount || !title || !description || !fee || !deadline) {
-    return res.status(401).send({
-      status: 401,
-      message: "Please enter all fields!!",
-    });
-  }
-
-  let date = Date.now();
-
-  try {
-    const org = await prisma.organization.findMany({
-      where: {
-        user_id: id,
-      },
-    });
-
-    if (org[0]) {
-      const bid = await prisma.bid.create({
-        data: {
-          user_id: id,
-          cpo_amount: parseFloat(cpo_amount),
-          created_at: new Date(),
-          title,
-          description,
-          fee: parseFloat(fee),
-          status: "PENDING",
-          deadline: new Date(deadline)
-        },
-        include: {
-          BidFiles: true,
-        },
-      });
-
-      await prisma.bidFiles.create({
-        data: {
-          bid_id: bid.id,
-          file_url: "/user/" + files
-        },
-      });
-
-      res.json(bid);
-    } else {
-      return res.status(500).send({
-        status: 401,
-        message: "Please create organization first!!",
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
-userControllers.browseBids = async (req, res) => {
-  const cpo_max = req.query.cpo_max;
-  const cpo_min = req.query.cpo_min;
-  const max = req.query.max;
-  const min = req.query.min;
-  const orderBy = req.query.orderBy;
-  const title = req.query.title;
-
-  try {
-    const bids = await prisma.bid.findMany({
-      where: {
-        title: {
-          contains: title || undefined,
-        },
-        cpo_amount: {
-          gte: parseFloat(cpo_min) || undefined,
-          lte: parseFloat(cpo_max) || undefined,
-        },
-        fee: {
-          gte: parseFloat(min) || undefined,
-          lte: parseFloat(max) || undefined,
-        },
-      },
-      orderBy: {
-        created_at: orderBy || undefined,
-      },
-      include: {
-        BidFiles: true,
-      },
-    });
-
-    res.json(bids);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
-userControllers.getBids = async (req, res) => {
-  const { id } = req.user;
-  const cpo_max = req.query.cpo_max;
-  const cpo_min = req.query.cpo_min;
-  const max = req.query.max;
-  const min = req.query.min;
-  const orderBy = req.query.orderBy;
-  const title = req.query.title;
-  const status = req.query.status;
-
-  try {
-    const bids = await prisma.bid.findMany({
-      where: {
-        user_id: id,
-        title: {
-          contains: title || undefined,
-        },
-        status: status || undefined,
-        cpo_amount: {
-          gte: parseFloat(cpo_min) || undefined,
-          lte: parseFloat(cpo_max) || undefined,
-        },
-        fee: {
-          gte: parseFloat(min) || undefined,
-          lte: parseFloat(max) || undefined,
-        },
-      },
-      orderBy: {
-        created_at: orderBy || undefined,
-      },
-      include: {
-        BidFiles: true,
-        Applications: true,
-        Payments: true,
-      },
-    });
-
-    res.json(bids);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
-userControllers.apply = async (req, res) => {
-  const files = req.files;
-  const { id } = req.user;
-  const bid_id = parseInt(req.query.bid_id);
-
-  // if (!files) {
-  //   return res.status(401).send({
-  //     status: 401,
-  //     message: "Please upload supporting documents!!",
-  //   });
-  // }
-
-  if (!bid_id) {
-    return res.status(401).send({
-      status: 401,
-      message: "Please enter all fields!!",
-    });
-  }
-
-  try {
-    const bid = await prisma.bid.findMany({
-      where: {
-        id: bid_id
-      }
-    })
-
-    const user = await prisma.user.findMany({
-      where:{
-        id
-      }
-    })
-
-    if(bid[0].cpo_amount > user.balance){
-      return res.status(401).send({
-        status: 401,
-        message: "Insufficient balance, please deposit enough amount of money in your acount"
-      });
-    }
-
-    const application = await prisma.application.create({
-      data: {
-        file_url:
-          "/user/" +
-           files,
-        user_id: id,
-        bid_id,
-        created_at: new Date(),
-      },
-    });
-
-    res.json(application);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
 userControllers.getFile = async (req, res) => {
   const file = req.params.file;
   res.sendFile(__dirname + `/uploads/${file}`);
 };
-
-userControllers.acceptApplication = async (req, res) => {
-  const application_id = parseInt(req.query.id);
-  const bid_id = parseInt(req.query.bid_id);
-
-  try {
-    const bid = await prisma.bid.update({
-      where: {
-        id: bid_id,
-      },
-      data: {
-        status: "COMPLETED",
-      },
-    });
-
-    const app = await prisma.application.findMany({
-      where: { id: application_id },
-    });
-    const user = app[0].user_id;
-
-    await prisma.application.update({
-      where: {
-        id: application_id
-      },
-      data: {
-        status: "ACCEPTED"
-      }
-    })
-    await prisma.notification.create({
-      data: {
-        user_id: user,
-        message: `Congragulations we have accepted your application.`,
-        created_at: new Date(),
-      },
-    });
-
-    res.json(bid);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
-userControllers.deposit = async (req, res) => {
-  const { fname, lname, email } = req.user;
-  const id = parseInt(req.query.id);
-
-  const amount = parseFloat(req.query.amount);
-
-  if (!amount) {
-    return res.status(401).send({
-      status: 401,
-      message: "Please enter all fields!!",
-    });
-  }
-
-  try {
-    const payment = await prisma.payment.create({
-      data: {
-        user_id: id,
-        amount,
-        paid_at: new Date(),
-        status: "PENDING",
-      },
-    });
-
-    await prisma.user.update({
-      where: {
-        id
-      },
-      data: {
-        balance: {
-          increment: amount
-        }
-      }
-    })
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${CHAPA_AUTH}`,
-      },
-    };
-
-    const CALLBACK_URL = "http://localhost:4400/api/verify-payment/";
-    const RETURN_URL = "http://localhost:5173/sucess";
-
-    const TEXT_REF = "tx-myecommerce12345-" + Date.now();
-
-    const data = {
-      amount: amount.toString(),
-      currency: "ETB",
-      email: email,
-      first_name: fname,
-      last_name: lname,
-      tx_ref: TEXT_REF,
-      callback_url: CALLBACK_URL + TEXT_REF,
-      return_url: RETURN_URL,
-    };
-
-    await axios
-      .post(CHAPA_URL, data, config)
-      .then((response) => {
-        res.json({
-          url: response.data.data.checkout_url,
-          ...payment,
-        });
-      })
-      .catch((err) => console.log(err));
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
-userControllers.verifyPayment = async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  try {
-    await prisma.payment
-      .update({
-        where: {
-          id,
-        },
-        data: {
-          status: "COMPLETED",
-        },
-      })
-      .then((result) => {
-        res.json(result);
-      });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
-userControllers.getBidById = async (req, res) => {
-  const { id } = req.user;
-  const bid_id = parseInt(req.params.id);
-
-  console.log(bid_id)
-  if (!bid_id) {
-    return res.status(401).send({
-      status: 401,
-      message: "Please enter all fields!!",
-    });
-  }
-
-  try {
-
-    const user = await prisma.user.findMany({
-      where: {
-        id
-      }
-    })
-
-    const balance = user[0].balance;
-
-    const payment = await prisma.payment.findMany({
-      where: {
-        user_id: id,
-        bid_id,
-      },
-    });
-
-    const bid = await prisma.bid.findMany({
-      where: {
-        id: bid_id,
-      },
-      include: {
-        Applications: true,
-        BidFiles: true
-      }
-    });
-
-    if (payment.length == 0) {
-     if(balance < bid[0].fee){
-      return res.status(401).send({
-        status: 401,
-        message: "Insufficient balance, please deposit enough amount of money in your acount"});
-     }else{
-      await prisma.user.update({
-        where: {
-          id,
-        },
-        data: {
-          balance: {
-            decrement: bid[0].fee,
-          },
-        },
-      });
-
-      await prisma.payment.create({
-        data: {
-          user_id: id,
-          bid_id,
-          amount: bid[0].fee,
-          paid_at: new Date(),
-          status: "COMPLETED"
-        }
-      })
-     }
-
-     res.json(bid);
-    }else if(id === bid[0].user_id){
-      res.json(bid); 
-    }else {
-      res.json(bid); 
-      // return res.status(401).send({
-      //   status: 401,
-      //   message: "You already applied to the bid please wait for response from the organization!!",
-      // });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-};
-
-
-userControllers.getPayments = async(req, res) => {
-  const { id } = req.user;
-  try {
-    const payments = await prisma.payment.findMany({
-      where: {
-        user_id: id
-      },
-      orderBy: {
-        paid_at: "desc"
-      }
-    })
-
-    res.json(payments);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      status: 500,
-      message: error.meta || "Internal error check the server log!!",
-    });
-  }
-}
 
 userControllers.getNotifications = async(req, res) => {
   const { id } = req.user;
@@ -692,10 +265,11 @@ userControllers.getNotifications = async(req, res) => {
   }
 }
 
-userControllers.getWinner = async(req, res) => {
-  const bid_id = parseInt(req.query.bid_id);
+userControllers.changePassword = async(req, res) => {
+  const { id, password } = req.user.newUser ? req.user.newUser : req.user;
+  const { oldPassword, newPassword } = req.body; 
 
-  if(!bid_id){
+  if(!oldPassword || !newPassword){
     return res.status(401).send({
       status: 401,
       message: "Please enter all fields!!",
@@ -703,32 +277,181 @@ userControllers.getWinner = async(req, res) => {
   }
 
   try {
-    const application = await prisma.application.findMany({
+    const isMatch = bcrypt.compareSync(oldPassword, password);
+    if(isMatch){
+      let salt = await bcrypt.genSalt(10);
+      let pwd = await bcrypt.hash(newPassword, salt);
+
+      await prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          password: pwd
+        }
+      })
+
+      res.json("Done!!")
+    }else {
+      return res.status(401).send({
+        status: 401,
+        message: "Invalid old password!!",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
+}
+
+userControllers.forgotPassword = async(req, res) => {
+  const { email, newPassword } = req.body;
+
+  if(!email || !newPassword){
+    return res.status(401).send({
+      status: 401,
+      message: "Please enter all fields!!",
+    });
+  }
+
+  try {
+    const user = await prisma.user.findMany({
       where: {
-        bid_id,
-        status: "ACCEPTED"
+        email
       }
     })
 
-    if(application[0]){
-      const user = await prisma.user.findMany({
+    if(user[0]){
+      let salt = await bcrypt.genSalt(10);
+      let pwd = await bcrypt.hash(newPassword, salt);
+
+      await prisma.user.update({
         where: {
-          id: application[0].user_id
+          id: user[0].id
+        },
+        data: {
+          password: pwd
         }
-      });
-  
-      res.json({
-        message: `User ${user[0].fname} ${user[0].lname} has won the bidding.`
       })
-    }else{
-      res.json()
+
+      res.json("Done!!")
+    }else {
+      return res.status(401).send({
+        status: 401,
+        message: "User not found!!",
+      });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });   
+  }
+}
+
+userControllers.verifyAccount = async(req, res) => {
+  const { id } = req.user.newUser ? req.user.newUser : req.user;
+  const { code } = req.body;
+
+  console.log(id, code);
+  if(!code){
+    return res.status(401).send({
+      status: 401,
+      message: "Please enter all fields!!",
+    });
+  }
+
+  try {
+    const verification = await prisma.verification.findMany({
+      where: {
+        user_id: id,
+        code,
+        expires_at: {
+          gt: new Date()
+        }
+      }
+    })
+
+    if(verification[0]){
+      const user = await prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          status: "ACTIVE"
+        }
+      })
+
+      res.json(user)
+    }else {
+      return res.status(401).send({
+        status: 401,
+        message: "Please verify again!!",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });  
+  }
+}
+
+userControllers.suspendUser = async(req, res) => {
+  const { role } = req.admin;
+  const id = parseInt(req.query.id);
+
+  try {
+    if(role){
+      await prisma.user.update({
+        where: {
+          id
+        },
+        data: {
+          status: "SUSPENDED"
+        }
+      })
+  
+      res.json({message: "Done!!"})
+    }else {
+      return res.status(401).send({
+        status: 401,
+        message: "Unauthorized user!!",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });    
+  }
+}
+
+userControllers.getRequests = async(req, res) => {
+
+  console.log("called");
+  const { id } = req.user;
+
+  try {
+    const requests = await prisma.withdrawalRequest.findMany({
+      where: {
+        user_id: id
+      }
+    })
+
+    res.json(requests)
   } catch (error) {
      console.log(error);
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
-    });
+    });  
   }
 }
 

@@ -139,35 +139,35 @@ const HomePage = () => {
                 <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-lg border-2">
                     <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
                     <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Amanual Abebayehu
+                        Group Member
                     </p>
                 </div>
 
                 <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
                     <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
                     <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Behailu Adugna
+                        Group Member
                     </p>
                 </div>
 
                 <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
                     <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
                     <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Elias Shimeles
+                        Group Member
+                    </p>
+                </div>
+
+                <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
+                    <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/female-placeholder.jpeg" alt="user image" />
+                    <p className="text-xl text-center text-gray-800 font-bold py-4">
+                        Group Member
                     </p>
                 </div>
 
                 <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
                     <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
                     <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Erimas Gashaw
-                    </p>
-                </div>
-
-                <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
-                    <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
-                    <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Shis Mubarek
+                        Group Member
                     </p>
                 </div>
 
