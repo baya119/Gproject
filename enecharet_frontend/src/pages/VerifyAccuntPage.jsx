@@ -5,6 +5,7 @@ import { Modal, Label, TextInput, Button, Spinner } from 'flowbite-react';
 import { BsFillCheckCircleFill, BsFillXOctagonFill } from "react-icons/bs";
 import axios from 'axios';
 import { BASE_URL } from '../util/Constants';
+import { useLocation } from 'react-router-dom';
 
 const VerifyAccuntPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +14,9 @@ const VerifyAccuntPage = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [verificationCode, setVerificationCode] = useState("");
-
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const source = queryParams.get('source');
     let header = {
         'x-auth-token': token
     }
@@ -22,31 +25,30 @@ const VerifyAccuntPage = () => {
         setVerificationCode(e.target.value);
     }
 
-    const onClose = (e) => {
+    const onClose = () => {
         setShowDialog(false);
+        
         if (result.status < 400) {
-            navigate("/signIn");
+            navigate('/signIn');
         }
-    }
+      };
 
     const handleSubmit = (e) => {
         setIsLoading(true);
-        axios.put(BASE_URL + '/api/account/verify', { code: verificationCode }, { headers: header })
+            axios.put(BASE_URL + '/api/account/verify', { code: verificationCode }, { headers: header })
             .then(response => {
                 setIsLoading(false);
                 setResult(response);
                 setShowDialog(true);
                 localStorage.setItem('user', JSON.stringify(response.data));
+                
             })
             .catch(err => {
                 setIsLoading(false);
                 setResult(err.response);
                 setShowDialog(true);
             });
-    }
 
-    if (!token) {
-        return <NotFoundErrorPage />
     }
 
     return (

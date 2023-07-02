@@ -7,6 +7,9 @@ const NavbarComponent = () => {
     const data = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
+    const queryParams = new URLSearchParams(location.search);
+
+    const source = queryParams.get('source');
 
     console.log(data);
 
@@ -20,6 +23,9 @@ const NavbarComponent = () => {
         navigate("/");
     };
 
+    const handleSignInClick = () => {
+        navigate("/signin");
+    };
 
     return (
         <div className="bg-white shadow-md px-16 fixed top-0 w-full z-50">
@@ -37,8 +43,8 @@ const NavbarComponent = () => {
                     <Navbar.Link href="/bids" className="align-middle">
                         Bids
                     </Navbar.Link>
-                    {isAuthenticated && (
-                        role == "user" ? (
+                    {isAuthenticated && source !== "verify" ? (
+                        role === "user" ? (
                             <div className="flex flex-wrap gap-2">
                                 <Avatar
                                     alt="avatar of user"
@@ -67,6 +73,10 @@ const NavbarComponent = () => {
                                 </Navbar.Link>
                             </>
                         )
+                    ) : (
+                        <Navbar.Link onClick={handleSignInClick} className="cursor-pointer">
+                            Sign In
+                        </Navbar.Link>
                     )}
                 </Navbar.Collapse>
             </Navbar>

@@ -19,7 +19,9 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import PaymentSucess from './pages/PaymentSucess';
 import ForgotPassword from './pages/ForgotPassword';
 import VerifyAccuntPage from './pages/VerifyAccuntPage';
-
+import ForgotPasswordForm from './components/ZForgotPasswodComponent';
+import PasswordResetForm from './components/ZPasswodResetComponent';
+import VerifyForgotPassword from './pages/VerifyForgotPassword';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -70,13 +72,29 @@ const router = createBrowserRouter([
         element: <VerifyAccuntPage />
       },
       {
+        path: "/forgotPassword",
+        element: <ForgotPasswordForm />
+      },
+      {
+        path: "/changePassword",
+        element: <PasswordResetForm />
+      },
+
+      {
+        path: "/verifyForgotPassword",
+        element: <VerifyForgotPassword />
+      },
+      {
         path: "*",
         element: <NotFoundErrorPage />
       },
-      {
-        path: "/forgotPassword",
-        element: <ForgotPassword />
-      }
+      // {
+      //   path: "/forgotPassword",
+      //   element: <ForgotPassword />
+      // }
+
+
+
     ]
   },
 ]);

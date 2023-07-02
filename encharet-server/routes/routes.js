@@ -27,15 +27,23 @@ router.put("/suspend", middleware.adminAuth, userController.suspendUser);
 
 router.put("/account/verify", middleware.userAuth, userController.verifyAccount);
 
+router.put("/account/verifyForgotPassword", middleware.userAuth, userController.verifyAccountToForgetPassword);
+
 router.put("/change/password", middleware.userAuth, userController.changePassword);
 
-router.put("/forgot/password" , userController.forgotPassword);
+//router.put("/forgot/password" , userController.forgotPassword);
+
+router.post("/forgot/password" , userController.forgot);
+
+router.post("/account/reset-password" , userController.resetPassword);
 
 router.get("/my_requests", middleware.userAuth, userController.getRequests);
 
 // bid management
 
 router.get("/bids", bidController.browseBids);
+
+router.get("/bidsOrg", bidController.browseBidsOrg);
 
 router.get("/bids/closed", middleware.userAuth, bidController.getClosedBids);
 

@@ -56,6 +56,7 @@ model bid {
   BidFiles     bidFiles[]
   Applications application[]
   Payments     payment[]
+  Notifications notification[]
 }
 
 model bidFiles {
@@ -90,9 +91,11 @@ model payment {
 model notification {
   id         Int      @id @default(autoincrement())
   user_id    Int
+  bid_id     Int
   message    String
   created_at DateTime
   User       user     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Bid        bid?     @relation(fields: [bid_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model verification {

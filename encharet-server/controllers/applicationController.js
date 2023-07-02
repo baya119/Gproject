@@ -114,20 +114,22 @@ applicationController.acceptApplication = async (req, res) => {
         cpo_holded: {
           decrement: bid.cpo_amount
         },       
+        active_balance: {
+          increment: bid.cpo_amount}
       }
     });
 
     // updating balance of the bid owner
-    await prisma.user.update({
-      where: {
-        id: bid.user_id
-      },
-      data: {
-        active_balance: {
-          increment: (0.85 * bid.cpo_amount)
-        }
-      }
-    })
+    // await prisma.user.update({
+    //   where: {
+    //     id: bid.user_id
+    //   },
+    //   data: {
+    //     active_balance: {
+    //       increment: (0.85 * bid.cpo_amount)
+    //     }
+    //   }
+    // })
 
     // updating balance info of each applicants
     bid.Applications.map(async ap => {
@@ -154,6 +156,7 @@ applicationController.acceptApplication = async (req, res) => {
         user_id: user.id,
         message: `Congragulations we have accepted your application.`,
         created_at: new Date(),
+        bid_id: bid.id
       },
     });
 

@@ -216,7 +216,7 @@ const UserProfilePage = () => {
                                     </Card>
                                     <Card className="hover:shadow-lg w-1/3">
                                         <div className="flex justify-center items-baseline mb-2">
-                                            <span className="mr-2 text-3xl font-bold text-gray-600">{user.total_fee ? user.total_fee : 0}</span>
+                                            <span className="mr-2 text-3xl font-bold text-gray-600">{user.total_fee ? user.total_fee.toFixed(2) : 0}</span>
                                         </div>
                                         <p className="font-light text-gray-500 text-center sm:text-lg">
                                             Total Fee
@@ -224,7 +224,7 @@ const UserProfilePage = () => {
                                     </Card>
                                     <Card className="hover:shadow-lg w-1/3">
                                         <div className="flex justify-center items-baseline mb-2">
-                                            <span className="mr-2 text-3xl font-bold text-gray-600">{user.active_balance ? user.active_balance : 0 }</span>
+                                            <span className="mr-2 text-3xl font-bold text-gray-600">{user.active_balance ? user.active_balance.toFixed(2) : 0 }</span>
                                         </div>
                                         <p className="font-light text-gray-500 text-center sm:text-lg">
                                             Active Balance

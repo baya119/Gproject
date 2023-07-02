@@ -88,7 +88,7 @@ const SignUpPage = () => {
         setShowDialog(false);
         if (result.status < 400) {
             console.log(parseInt(result.status));
-            navigate("/verifyAccount");
+            navigate("/verifyAccount?source=verify");
         }
     };
 
