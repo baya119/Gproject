@@ -23,6 +23,7 @@ const validationSchema = yup.object({
         .required('Email is required'),
     password: yup
         .string('Enter your password')
+        .matches(/^(09|07|\+2519|\+2517)\d{8}$/, 'Invalid phone number')
         .min(6, 'Password should be of minimum 8 characters length')
         .max(16, 'Password should be of maximum 16 characters length')
         .required('Password is required'),

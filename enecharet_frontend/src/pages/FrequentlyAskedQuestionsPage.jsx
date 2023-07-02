@@ -17,23 +17,19 @@ const FrequentlyAskedQuestionsPage = () => {
                     <Accordion.Content>
                         <p className="mb-2 text-gray-500 dark:text-gray-400">
                             <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. At, mollitia!
-                                Dolore quia tempora inventore, nostrum explicabo soluta dolorem eligendi aliquid ex labore fugiat consectetur ut similique quas sint iusto saepe? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae assumenda quo nulla quaerat iure, unde repellat sed temporibus qui magni, laboriosam eum itaque eos quibusdam expedita, non ex sequi facere.
+                            Encharet is an online platform that aggregates and delivers tender notices from various sources across Ethiopia. We provide a one-stop-shop for businesses and individuals seeking to explore opportunities in the Ethiopian market.
                             </p>
                         </p>
                     </Accordion.Content>
                 </Accordion.Panel>
                 <Accordion.Panel>
                     <Accordion.Title>
-                        Is it legall to use?
+                    Can a bidder withdraw a bid after a bid opening?
                     </Accordion.Title>
                     <Accordion.Content>
                         <p className="mb-2 text-gray-500 dark:text-gray-400">
                             <p>
-                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi qui vel rem consequatur delectus provident illo quia ipsum accusantium, dolorem exercitationem. Pariatur labore earum facilis tenetur libero consequuntur alias quod?
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ab, dicta, alias iure maiores asperiores quidem ea aut, est repellat hic cupiditate architecto quasi facilis nesciunt! Ipsum dolor ad aut.
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestiae dolor id ad eius, assumenda nulla voluptate ducimus. Tempora exercitationem sint magnam vitae, sequi id ducimus pariatur doloribus eos itaque? Inventore.
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil fugiat repellat itaque dolorum repellendus error architecto consectetur quaerat cumque, exercitationem vel quam voluptatibus beatae vero libero, esse quidem expedita similique!
+                            No, he can not. If at all he wishes to then he has to forfeit his EMD.
                             </p>
                         </p>
 
@@ -41,17 +37,38 @@ const FrequentlyAskedQuestionsPage = () => {
                 </Accordion.Panel>
                 <Accordion.Panel>
                     <Accordion.Title>
-                        How do you get your TIN number?
+                    What is a tender document?
                     </Accordion.Title>
                     <Accordion.Content>
                         <p className="mb-2 text-gray-500 dark:text-gray-400">
                             <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut placeat necessitatibus nobis, eveniet nihil explicabo. Mollitia placeat, ab amet quas culpa illum harum voluptatibus exercitationem ipsam obcaecati consequuntur, facilis nobis.
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Commodi, natus, fugit unde ad fugiat numquam asperiores accusantium, quasi iste tenetur impedit suscipit fuga qui non eaque. Labore porro sit quo?
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus, veniam eaque unde tempore, numquam vero accusantium, iusto quas earum minima nostrum consequatur molestiae eum quo tenetur fugit laudantium cum. Ab.
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit natus aut, qui tenetur enim, incidunt earum magnam, explicabo laboriosam quisquam nam culpa. Harum assumenda totam accusantium, eveniet exercitationem atque non.
+                            A tender document is the document which contains all terms and condition of the items/services to be procured by the purchaser. It generally includes: Terms and conditions, scope of supply, bill of quantity, format for agreement, Earnest Money Deposit, Security Deposit, do’s, don’t do’s, special condition of contract, general conditions of contract, payment terms, delivery time and locations etc.</p>
+                        </p>
+                    </Accordion.Content>
+                </Accordion.Panel>
+                <Accordion.Panel>
+                    <Accordion.Title>
+                    What happens when only one bidder submit the bid?
+                    </Accordion.Title>
+                    <Accordion.Content>
+                        <p className="mb-2 text-gray-500 dark:text-gray-400">
+                            <p>
+                            Though, each and every government organization will have it's own procurement procedure, but in general public procurement across the globe, follow few basic principles: Transparency, Equal opportunity, value for money and money to be spent only for the purpose it is intended for. In case of only one response, generally all government entities will go for re-tender. But even after re-tendering there is only one response then depending upon the value of item to be purchased, price quoted by the bidder and urgency of the procurement, they may award the contract to the single bidder.
                             </p>
                         </p>
+                    </Accordion.Content>
+                </Accordion.Panel>
+                <Accordion.Panel>
+                    <Accordion.Title>
+                    Is there any way the bidder gets the refund of tender document fee, in case he is not successful?
+                    </Accordion.Title>
+                    <Accordion.Content>
+                        <p className="mb-2 text-gray-500 dark:text-gray-400">
+                            <p>
+                            No, there is no provision. Actually we should understand the rationale behind charging the tender document fee. The tender document fee is charged to cover the expenses incurred in preparing the same. The same is divided by approximate number of bidders who might purchase the tender document.
+                            </p>
+                        </p>
+
                     </Accordion.Content>
                 </Accordion.Panel>
             </Accordion>

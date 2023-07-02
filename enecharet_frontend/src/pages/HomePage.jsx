@@ -4,7 +4,11 @@ import Lottie from "lottie-react";
 import lottie_one from "../assets/lottie_bidding.json";
 import lottie_two from "../assets/business_table.json";
 import lottie_three from "../assets/business.json";
-
+import img1 from "../assets/be.jpg";
+import img2 from "../assets/amani.jpg";
+import img3 from "../assets/ela.png";
+import img4 from "../assets/ermias.jpg";
+import img5 from "../assets/shis.jpg";
 const style = {
     height: 400,
     width: 350,
@@ -27,7 +31,7 @@ const HomePage = () => {
                     <p className="text-lg">Bid Smarter, Faster, and More Effectively with Our User-Friendly Website</p>
                     <div className="flex flex-row my-6">
                         <div>
-                            <Button size="md" pill href="/signUp">
+                            <Button size="md" pill href="/signin">
                                 Get started
                             </Button>
                         </div>
@@ -135,39 +139,39 @@ const HomePage = () => {
             <p className="text-4xl sm:text-3xl text-center text-gray-800 py-5">
                 Developers
             </p>
-            <div className="grid grid-cols-3 justify-center gap-3 place-items-center py-10 place-content-center">
-                <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-lg border-2">
-                    <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
-                    <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Group Member
+            <div className="grid grid-cols-5 justify-center gap-3 place-items-center py-10 place-content-center">
+                <div className="content-center shadow-lg hover:shadow-2xl py-5 px-10 rounded-lg border-2">
+                    <img className="rounded-full border border-gray-100 self-center" width="70px" height="70px" src={img2} alt="user image" />
+                    <p className="text-s text-center text-gray-800 font-bold py-1">
+                    Amanuel Abebayehu
                     </p>
                 </div>
 
-                <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
-                    <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
-                    <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Group Member
+                <div className="content-center shadow-lg hover:shadow-2xl py-5 px-10 rounded-md border-2">
+                    <img className="rounded-full border border-gray-100 self-center" width="70px" height="70px" src={img1} alt="user image" />
+                    <p className="text-s text-center text-gray-800 font-bold py-4">
+                        Behailu Adugna
                     </p>
                 </div>
 
-                <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
-                    <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
-                    <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Group Member
+                <div className="content-center shadow-lg hover:shadow-2xl py-5 px-10 rounded-md border-2">
+                    <img className="rounded-full border border-gray-100 self-center" width="70px" height="70px" src={img3} alt="user image" />
+                    <p className="text-s text-center text-gray-800 font-bold py-4">
+                        Elias Shimeles
                     </p>
                 </div>
 
-                <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
-                    <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/female-placeholder.jpeg" alt="user image" />
-                    <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Group Member
+                <div className="content-center shadow-lg hover:shadow-2xl py-5 px-10 rounded-md border-2">
+                    <img className="rounded-full border border-gray-100 self-center" width="70px" height="70px" src={img4} alt="user image" />
+                    <p className="text-s text-center text-gray-800 font-bold py-4">
+                    Ermias Gashaw
                     </p>
                 </div>
 
-                <div className="content-center shadow-lg hover:shadow-2xl py-10 px-20 rounded-md border-2">
-                    <img className="rounded-full border border-gray-100 self-center" width="150px" height="150px" src="./images/image_placeholder.jpg" alt="user image" />
-                    <p className="text-xl text-center text-gray-800 font-bold py-4">
-                        Group Member
+                <div className="content-center shadow-lg hover:shadow-2xl py-5 px-10 rounded-md border-2">
+                    <img className="rounded-full border border-gray-100 self-center" width="70px" height="70px" src={img5} alt="user image" />
+                    <p className="text-s text-center text-gray-800 font-bold py-4">
+                        Shis Mubarek
                     </p>
                 </div>
 

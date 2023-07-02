@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "prisma": "^4.16.2"
+  },
+  "dependencies": {
+    "global": "^4.4.0",
+    "react": "^18.2.0"
+  }
+}
