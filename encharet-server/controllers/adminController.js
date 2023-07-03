@@ -19,7 +19,7 @@ adminControllers.addAdmin = async (req, res) => {
       password: pwd,
     },
   });
-  console.log(admin);
+  
   res.json(admin);
 };
 
@@ -61,7 +61,7 @@ adminControllers.login = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
@@ -77,7 +77,23 @@ adminControllers.getAllUsers = async (req, res) => {
 
     res.json(users);
   } catch (error) {
-    console.log(error);
+    
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
+};
+
+adminControllers.getAllOrgs = async (req, res) => {
+  try {
+    const orgs = await prisma.organization.findMany({
+      where: {},
+    });
+
+    res.json(orgs);
+  } catch (error) {
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
@@ -102,7 +118,7 @@ adminControllers.getWithdrawalRequests = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
@@ -148,7 +164,7 @@ adminControllers.acceptWithdrawalRequest = async (req, res) => {
           res.json(response);
         })
         .catch((err) => {
-          console.log(err);
+          
         });
     } else {
       return res.status(401).send({
@@ -157,7 +173,7 @@ adminControllers.acceptWithdrawalRequest = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",

@@ -40,7 +40,7 @@ bidControllers.createBid = async(req, res) => {
             });
 
         if (status === "ACTIVE") {
-            if (org[0]) {
+            if (org[0] && org[0].status == "ACTIVE") {
                 const bid = await prisma
                     .bid
                     .create({
@@ -69,8 +69,16 @@ bidControllers.createBid = async(req, res) => {
                         }
                     });
 
-                res.json(bid);
-            } else {
+                    return res
+                    .status(201)
+                    .send({status: 201, message: "Your bid has been successfully accepted."});
+            } 
+            else if(org[0].status != "ACTIVE"){
+                return res
+                    .status(500)
+                    .send({status: 401, message: "Please wait for the administrator to activate the organization.!!"});
+            }
+            else {
                 return res
                     .status(500)
                     .send({status: 401, message: "Please create organization first!!"});
@@ -85,7 +93,7 @@ bidControllers.createBid = async(req, res) => {
                 .send({status: 401, message: "Please verify your account first!!"});
         }
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -116,7 +124,7 @@ bidControllers.getOngoingBids = async(req, res) => {
                     status: "PENDING"
                 }
             });
-        console.log(applications.length);
+        
 
         const bidsPromises = applications.map(async(application) => {
             const bid = await prisma
@@ -147,12 +155,12 @@ bidControllers.getOngoingBids = async(req, res) => {
         });
 
         const bids = await Promise.all(bidsPromises);
-        console.log(bids.length);
+        
 
-        console.log(bids);
+        
         res.json(bids);
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -197,7 +205,7 @@ bidControllers.browseBids = async(req, res) => {
 
         res.json(bids);
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -229,7 +237,7 @@ bidControllers.browseBidsOrg = async (req, res) => {
 
     res.json(org);
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
@@ -253,7 +261,7 @@ bidControllers.getClosedBids = async(req, res) => {
 
         res.json(closedBids);
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -282,7 +290,7 @@ bidControllers.getUpcomingBids = async(req, res) => {
 
         res.json(upcomingBids);
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -308,7 +316,7 @@ bidControllers.getMyBids = async(req, res) => {
 
         res.json(myBids);
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -471,7 +479,7 @@ bidControllers.getBidById = async(req, res) => {
                 .send({status: 401, message: "Please verify your account first!!"});
         }
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -540,7 +548,7 @@ bidControllers.editBid = async(req, res) => {
 
         res.json(bid)
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -569,7 +577,7 @@ bidControllers.removeBid = async(req, res) => {
                 .send({status: 401, message: "Unauthorized user!!"});
         }
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({

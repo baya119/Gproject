@@ -68,7 +68,7 @@ applicationController.apply = async (req, res) => {
 
     res.json(application);
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
@@ -174,7 +174,7 @@ applicationController.acceptApplication = async (req, res) => {
 
     res.json(bid);
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
@@ -214,7 +214,7 @@ applicationController.getWinner = async(req, res) => {
       res.json()
     }
   } catch (error) {
-     console.log(error);
+     
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",

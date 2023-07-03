@@ -345,6 +345,7 @@ userControllers.getProfile = async(req, res) => {
 };
 
 userControllers.createOrganization = async(req, res) => {
+    const files = req.files;
     const {id} = req.user.newUser
         ? req.user.newUser
         : req.user;
@@ -352,6 +353,11 @@ userControllers.createOrganization = async(req, res) => {
     const {name, tin_number, type, location} = req.body;
 
     if (!name || !tin_number || !type || !location) {
+        
+        
+        
+        
+
         return res
             .status(401)
             .send({status: 401, message: "Please enter all fields!!"});
@@ -369,7 +375,12 @@ userControllers.createOrganization = async(req, res) => {
                         }]
                 }
             });
-
+            if (!files) {
+                return res
+                    .status(401)
+                    .send({status: 401, message: "Please upload supporting documents!!"});
+            }
+            
         let isFound = n > 0
             ? true
             : false;
@@ -386,6 +397,7 @@ userControllers.createOrganization = async(req, res) => {
                         tin_number,
                         type,
                         location,
+                        file_url: "/user/" + files,
                         user_id: id,
                         registered_at: new Date()
                     }
@@ -411,7 +423,7 @@ userControllers.getFile = async(req, res) => {
 
 userControllers.getNotifications = async(req, res) => {
     const {id} = req.user;
-    console.log("inside get nofication");
+    
     try {
 
         const notification = await prisma
@@ -421,7 +433,7 @@ userControllers.getNotifications = async(req, res) => {
                     user_id: id
                 }
             });
-            console.log(notification.length);
+            
         const bidsPromises = notification.map(async(notif) => {
             const bid = await prisma
                 .bid
@@ -434,7 +446,7 @@ userControllers.getNotifications = async(req, res) => {
             return bid;
         });
         const bids = await Promise.all(bidsPromises);
-console.log(bids);
+
         res.json(bids)
     } catch (error) {
 
@@ -669,6 +681,53 @@ userControllers.suspendUser = async(req, res) => {
             } else if (status == "SUSPENDED") {
                 await prisma
                     .user
+                    .update({
+                        where: {
+                            id
+                        },
+                        data: {
+                            status: "ACTIVE"
+                        }
+                    })
+            }
+
+            res.json({message: "Done!!"})
+        } else {
+            return res
+                .status(401)
+                .send({status: 401, message: "Unauthorized user!!"});
+        }
+    } catch (error) {
+
+        return res
+            .status(500)
+            .send({
+                status: 500,
+                message: error.meta || "Internal error check the server log!!"
+            });
+    }
+}
+
+userControllers.suspendOrg = async(req, res) => {
+    const {role} = req.admin;
+    const id = parseInt(req.query.id);
+    const status = req.query.status;
+    try {
+        if (role) {
+            if (status == "ACTIVE") {
+                await prisma
+                    .organization
+                    .update({
+                        where: {
+                            id
+                        },
+                        data: {
+                            status: "SUSPENDED"
+                        }
+                    })
+            } else if (status == "SUSPENDED" || status == "PENDING") {
+                await prisma
+                    .organization
                     .update({
                         where: {
                             id
