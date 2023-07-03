@@ -54,6 +54,8 @@ const AdminPage = () => {
     let navigate = useNavigate();
     const [isUserListLoading,
         setisUserListLoading] = useState(false);
+    const [isOrgListLoading,
+        setisOrgListLoading] = useState(false);
     const [isBidsListLoading,
         setIsBidsListLoading] = useState(false);
     const [isWithDrawalLoading,
@@ -64,10 +66,12 @@ const AdminPage = () => {
         setSelectedId] = useState(-1);
     const [usersList,
         setUsersList] = useState([]);
+    const [orgsList,
+        setOrgsList] = useState([]);
     const [bidsList,
         setBidsList] = useState([]);
-        const [orgList,
-            setOrgList] = useState([]);
+    const [orgList,
+        setOrgList] = useState([]);
     const [withDrawalList,
         setWithDrawalList] = useState([]);
     const [showDialog,
@@ -85,6 +89,7 @@ const AdminPage = () => {
     const role = localStorage.getItem('role');
     const [searchTerm,
         setSearchTerm] = useState("");
+        const [searchQuery, setSearchQuery] = useState("");
 
     if (!token || role != "admin") {
         return <NotFoundErrorPage/>
@@ -135,20 +140,38 @@ const AdminPage = () => {
                     setIsBidsListLoading(false);
                     toast.error(err.response.data.message, {autoClose: 2000});
                 });
-                setIsBidsListLoading(true);
-                axios
-                  .get(BASE_URL + "/api/bidsOrg")
-                  .then(response => {
+            setIsBidsListLoading(true);
+            axios
+                .get(BASE_URL + "/api/bidsOrg")
+                .then(response => {
                     setOrgList(response.data);
-                    
+
                     setIsBidsListLoading(false);
-                  })
-                  .catch(err => {
+                })
+                .catch(err => {
                     setIsBidsListLoading(false);
-                    toast.error(err.response.data.message, { autoClose: 2000 });
+                    toast.error(err.response.data.message, {autoClose: 2000});
                     reject(err); // Reject the Promise if there's an error
-                  });
-            
+                });
+
+        } else if (activeTab === 3) {
+            setisOrgListLoading(true);
+            axios
+                .get(BASE_URL + "/api/orgs", {headers: header})
+                .then(response => {
+                    setisOrgListLoading(false);
+                    setOrgsList(response.data);
+                    console.log("organization found", response.data);
+                    toast.success(response.data.message, {autoClose: 2000});
+                })
+                .catch(err => {
+                    //alert(JSON.parse(err.response.data.message)); better UX? hmm...
+                    setResult(err.response);
+                    //setShowDialog(true);
+                    setisOrgListLoading(false);
+                    (false);
+                    toast.error(err.response.data.message, {autoClose: 2000});
+                })
         } else {
             setIsWithDrawalLoading(true);
             axios
@@ -182,11 +205,11 @@ const AdminPage = () => {
                 alert("Confirm your password properly!!")
             } else {
                 setIsLoading(true);
-                
+
                 axios
                     .post(BASE_URL + "/api/addAdmin", values)
                     .then(response => {
-                        
+
                         setIsLoading(false);
                         setResult(response);
                         //setShowDialog(true);
@@ -194,7 +217,7 @@ const AdminPage = () => {
 
                     })
                     .catch(err => {
-                        
+
                         setIsLoading(false);
                         setResult(err.response);
                         //setShowDialog(true);
@@ -217,7 +240,31 @@ const AdminPage = () => {
 
     const handleSuspendClick = (id, status) => {
         setIsActionPerforming(true);
-        axios.put(BASE_URL + `/api/suspend?id=${id}&status=${status}`, {}, {headers: header}).then(response => {
+        axios
+          .put(BASE_URL + `/api/suspend?id=${id}&status=${status}`, {}, { headers: header })
+          .then(response => {
+            setSelectedId(id);
+            setIsActionPerforming(false);
+            setResult(response);
+      
+            toast.success(response.data.message, { autoClose: 2000 });
+      
+            // Delay the reload after the toast message is displayed
+            setTimeout(() => {
+              window.location.reload(false);
+            }, 2000); // Adjust the delay as needed
+          })
+          .catch(err => {
+            setIsActionPerforming(false);
+            setResult(err.response);
+            toast.error(err.response.data.message, { autoClose: 2000 });
+          });
+      };
+      
+      
+    const handleOrgSuspendClick = (id, status) => {
+        setIsActionPerforming(true);
+        axios.put(BASE_URL + `/api/suspendOrg?id=${id}&status=${status}`, {}, {headers: header}).then(response => {
             //alert("Successfully suspended user!");
             setSelectedId(id);
             setIsActionPerforming(false);
@@ -302,21 +349,49 @@ const AdminPage = () => {
 
         return (lowerCaseTitle.includes(searchTerm.toLowerCase()) || lowerCaseDescription.includes(searchTerm.toLowerCase()) || lowerCaseUserId.includes(searchTerm.toLowerCase()) || lowerCaseEmail.includes(searchTerm.toLowerCase()));
     });
-const getOrganizationName = (id) => {
-    const org = orgList.find(org => org.user_id === id);
-    return org ? org.name.toString() : '';
-//     
-//   orgList.forEach(org => {
-//     
-//     
-//     if(org.user_id == id)
-//     {
-//         
-//         
-//         return org.name.toString();
-//     }
-//   });
-};
+
+    const filteredOrgsList = orgsList.filter((orgsItem) => {
+        const lowerCaseName = orgsItem
+            .name
+            .toLowerCase();
+        // const lowerCaseDescription = bidsItem
+        //     .description
+        //     .toLowerCase();
+        // const lowerCaseUserId = typeof bidsItem.user_id === 'string'
+        //     ? bidsItem
+        //         .user_id
+        //         .toLowerCase()
+        //     : '';
+        // const lowerCaseEmail = typeof bidsItem.email === 'string'
+        //     ? bidsItem
+        //         .email
+        //         .toLowerCase()
+        //     : '';
+
+        return (lowerCaseName.includes(searchQuery.toLowerCase()));
+    });
+
+    const getOrganizationName = (id) => {
+        const org = orgList.find(org => org.user_id === id);
+        return org
+            ? org
+                .name
+                .toString()
+            : '';
+        //
+        //   orgList.forEach(org => {
+        //
+        //
+        //     if(org.user_id == id)     {
+        //
+        //
+        //         return org.name.toString();     }   });
+    };
+
+    const handleViewFile = (id, fileUrl) => {
+
+    };
+
     return (
         <div>
             <Modal show={showDialog} size="md" popup={true} onClose={hanldeClose}>
@@ -493,7 +568,7 @@ const getOrganizationName = (id) => {
                                     <Table.Body>
                                         {filteredBidsList.map((bidsItem) => {
                                             //const org = getOrganizationName(bidsItem.user_id);
-                                            
+
                                             return (
                                                 <Table.Row
                                                     key={bidsItem
@@ -506,7 +581,9 @@ const getOrganizationName = (id) => {
                                                     <Table.Cell>{bidsItem.description}</Table.Cell>
                                                     <Table.Cell>{bidsItem.fee}</Table.Cell>
                                                     <Table.Cell>{bidsItem.tag}</Table.Cell>
-                                                    <Table.Cell>{bidsItem.total_fee.toFixed(2)}</Table.Cell>
+                                                    <Table.Cell>{bidsItem
+                                                            .total_fee
+                                                            .toFixed(2)}</Table.Cell>
                                                     <Table.Cell>{bidsItem.status}</Table.Cell>
                                                     <Table.Cell>
                                                         {!isActionPerforming
@@ -581,6 +658,109 @@ const getOrganizationName = (id) => {
                                     </Table.Body>
                                 </Table>
                             )}
+                    </Tabs.Item>
+                    <Tabs.Item title="Organizations">
+                    <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            placeholder="Search by name"
+                            className="border border-gray-300 rounded-md py-2 px-4 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                        {isOrgListLoading && (
+                            <div className="flex flex-row my-8 justify-center">
+                                <Spinner/>
+                            </div>
+                        )}
+
+                        {!isOrgListLoading && usersList.length == 0
+                            ? (<EmptyComponent type="Organizations"/>)
+                            : (
+                                <Table>
+                                    <Table.Head>
+                                        <Table.HeadCell>Id</Table.HeadCell>
+                                        <Table.HeadCell>Name</Table.HeadCell>
+                                        <Table.HeadCell>Type</Table.HeadCell>
+                                        <Table.HeadCell>Tin Number</Table.HeadCell>
+                                        <Table.HeadCell>Location</Table.HeadCell>
+                                        <Table.HeadCell>Status</Table.HeadCell>
+                                        <Table.HeadCell>File</Table.HeadCell>
+                                        <Table.HeadCell>Action</Table.HeadCell>
+                                    </Table.Head>
+                                    <Table.Body>
+                                        {filteredOrgsList.map((orgItem) => {
+                                            console.log("inside table", orgsList);
+                                            return (
+                                                <Table.Row
+                                                    key={orgItem
+                                                    .id
+                                                    .toString()}>
+                                                    <Table.Cell>{orgItem.id}</Table.Cell>
+                                                    <Table.Cell>{orgItem.name}</Table.Cell>
+                                                    <Table.Cell>{orgItem.type}</Table.Cell>
+                                                    <Table.Cell>{orgItem.tin_number}</Table.Cell>
+                                                    <Table.Cell>{orgItem.location}
+                                                    </Table.Cell>
+                                                    <Table.Cell>
+                                                        {orgItem.status === "PENDING"
+                                                            ? (
+                                                                <p className="text-gray-600">Pending</p>
+                                                            )
+                                                            : (
+                                                                <p
+                                                                    className={orgItem.status === "SUSPENDED"
+                                                                    ? "text-red-600"
+                                                                    : ""}>
+                                                                    {orgItem.status}
+                                                                </p>
+                                                            )}
+                                                    </Table.Cell>
+                                                    <Table.Cell>
+                                                        {!isActionPerforming || selectedId !== orgItem.id
+                                                            ? (
+                                                                // <Button
+                                                                //     color="success"
+                                                                //     pill
+                                                                //     size="xs"
+                                                                //     onClick={() => handleViewFile(orgItem.id, orgItem.file_url)}>
+                                                                //     View File
+                                                                // </Button>
+                                                                <a
+                                                                className="text-lg text-gray-700"
+                                                                href={"http://localhost:3000/api" + orgItem.file_url}
+                                                            >
+                                                                View
+                                                            </a>
+                                                            )
+                                                            : (<Spinner/>)}
+                                                    </Table.Cell>
+                                                    <Table.Cell>
+                                                        {!isActionPerforming || selectedId !== orgItem.id
+                                                            ? (
+                                                                <Button
+                                                                    color={orgItem.status === "SUSPENDED" || orgItem.status === "PENDING"
+                                                                    ? "success"
+                                                                    : "failure"}
+                                                                    pill
+                                                                    size="xs"
+                                                                    onClick={() => handleOrgSuspendClick(orgItem.id, orgItem.status)}
+                                                                    >
+                                                                    {orgItem.status === "SUSPENDED" || orgItem.status === "PENDING"
+                                                                        ? "Activate Organization"
+                                                                        : "Suspend Organization"}
+                                                                </Button>
+                                                            )
+                                                            : (<Spinner/>)}
+                                                    </Table.Cell>
+
+                                                </Table.Row>
+                                            );
+                                        })}
+
+                                    </Table.Body>
+
+                                </Table>
+                            )}
+
                     </Tabs.Item>
                     <Tabs.Item title="Create Admin User">
                         <div className="flex flex-row justify-center">
