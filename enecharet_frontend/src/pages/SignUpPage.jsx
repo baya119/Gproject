@@ -34,6 +34,7 @@ const validationSchema = yup.object({
         .required('Last name is required'),
     phonenumber: yup
         .string('Enter your phone number')
+        .matches(/^(09|07|\+2519|\+2517)\d{8}$/, 'Invalid phone number')
         .required('phonenumber required'),
     cpassword: yup
         .string('Confirm your password')
@@ -88,7 +89,7 @@ const SignUpPage = () => {
         setShowDialog(false);
         if (result.status < 400) {
             console.log(parseInt(result.status));
-            navigate("/verifyAccount");
+            navigate("/verifyAccount?source=verify");
         }
     };
 

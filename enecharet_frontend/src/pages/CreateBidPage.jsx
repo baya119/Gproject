@@ -84,7 +84,7 @@ const CreateBidPage = () => {
 
 
     const onClose = (e) => {
-        if (result.status < 400) {
+        if (result.status < 400) { 
             setResult({});
             setFormValues(initialValues);
         }

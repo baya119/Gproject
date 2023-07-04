@@ -164,6 +164,7 @@ const BidDetailPage = () => {
 				console.log(JSON.stringify(response.data));
 				alert("Success!");
 				navigate(`/bid-detail/${bidId}`);
+				window.location.reload(); // Refresh the page
 			})
 			.catch((error) => {
 				setIsLoading(false);

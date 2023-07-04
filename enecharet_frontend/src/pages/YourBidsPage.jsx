@@ -9,7 +9,7 @@ const YourBidsPage = () => {
     const token = localStorage.getItem('token');
     const [bidsList, setBidsList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const role = localStorage.getItem("role");
     useEffect(() => {
         setIsLoading(true);
 
@@ -60,7 +60,7 @@ const YourBidsPage = () => {
                     <div className="lg:px-35 md:px-20">
                         {bidsList.map((bidItem) => {
                             return (
-                                <BidItemComponent bid={bidItem} key={bidItem.id.toString()} />
+                                <BidItemComponent bid={bidItem} key={bidItem.id.toString()} role={role} />
                             );
                         })}
                     </div>

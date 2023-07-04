@@ -186,7 +186,7 @@ const SettingsPage = () => {
                                         </div>
                                         <TextInput
                                             id="tin_number"
-                                            type="text"
+                                            type="number"
                                             placeholder="Please input your TIN number here"
                                             onBlur={handleInputChange}
                                             defaultValue={formValues.tin_number}

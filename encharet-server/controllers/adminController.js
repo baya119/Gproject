@@ -19,7 +19,7 @@ adminControllers.addAdmin = async (req, res) => {
       password: pwd,
     },
   });
-
+  console.log(admin);
   res.json(admin);
 };
 

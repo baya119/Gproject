@@ -62,7 +62,7 @@ const SignInPage = () => {
 	const onClose = () => {
 		setShowDialog(false);
 		if (result.status < 400) {
-			navigate("/")
+			navigate("/bids")
 		}
 	};
 

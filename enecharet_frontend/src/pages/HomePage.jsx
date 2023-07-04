@@ -27,7 +27,7 @@ const HomePage = () => {
                     <p className="text-lg">Bid Smarter, Faster, and More Effectively with Our User-Friendly Website</p>
                     <div className="flex flex-row my-6">
                         <div>
-                            <Button size="md" pill href="/signUp">
+                            <Button size="md" pill href="/signin">
                                 Get started
                             </Button>
                         </div>

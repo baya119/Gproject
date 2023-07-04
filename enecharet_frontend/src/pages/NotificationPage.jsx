@@ -6,7 +6,7 @@ import { BASE_URL } from '../util/Constants';
 export default function NotificationPage() {
   const token = localStorage.getItem("token");
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [bids, setData] = useState([]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -23,13 +23,14 @@ export default function NotificationPage() {
       axios
         .request(config)
         .then((response) => {
-          setData(response.data);
-          console.log(response.data);
           setIsLoading(false);
+
+          setData(response.data.flat());
+          console.log("in front end",response.data);
+
         })
         .catch((error) => {
           setIsLoading(false);
-          console.log(error);
         });
     };
 
@@ -38,10 +39,11 @@ export default function NotificationPage() {
 
   return (
     <div className="m-auto sm:my-4">
-      {data.length > 0 && (
+      {bids.length > 0 && (
         <div className="flex flex-col">
-          {data.map((notification) => {
-            return <NotificationItemComponent message={notification.message} created_at={notification.created_at} />;
+          {bids.map((bid) => {
+            console.log("check bid 0", bid.id);
+            return <NotificationItemComponent bid={bid} key={bid.id.toString()} />;
           })}
         </div>
       )}
