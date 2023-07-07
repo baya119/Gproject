@@ -5,6 +5,8 @@ import Lottie from "lottie-react";
 import errorLottieAnimation from "../assets/error_lottie.json";
 import { BASE_URL } from "../util/Constants";
 import axios from 'axios';
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const style = {
     height: 300,
@@ -72,13 +74,18 @@ const CreateBidPage = () => {
                 console.log(response.data);
                 setIsLoading(false);
                 setResult(response);
-                setShowDialog(true);
+                setFormValues(initialValues);
+                //setShowDialog(true);
+                toast.success(response.data.message, {autoClose: 3000});
+
             })
             .catch(error => {
                 setIsLoading(false);
                 console.log(error);
                 setResult(error.response);
-                setShowDialog(true);
+                //setShowDialog(true);
+                toast.error(error.response.data.message, {autoClose: 3000});
+
             });
     };
 
@@ -301,6 +308,8 @@ const CreateBidPage = () => {
                     </form>
                 </div>
             </div>
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={true}/>
+
         </div>
     )
 }

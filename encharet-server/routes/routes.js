@@ -19,11 +19,13 @@ router.get("/profile", middleware.userAuth, userController.getProfile);
 
 router.get("/user/:file", userController.getFile);
 
-router.post("/create/org", middleware.userAuth, userController.createOrganization);
+router.post("/create/org", [upload.single("files"), middleware.userAuth], userController.createOrganization);
 
 router.get("/notifications", middleware.userAuth, userController.getNotifications);
 
 router.put("/suspend", middleware.adminAuth, userController.suspendUser);
+
+router.put("/suspendOrg", middleware.adminAuth, userController.suspendOrg);
 
 router.put("/account/verify", middleware.userAuth, userController.verifyAccount);
 
@@ -76,6 +78,8 @@ router.post("/addAdmin", adminController.addAdmin);
 router.post("/admin/login", adminController.login);
 
 router.get("/users", middleware.adminAuth, adminController.getAllUsers);
+
+router.get("/orgs", middleware.adminAuth, adminController.getAllOrgs);
 
 router.get("/requests", middleware.adminAuth, adminController.getWithdrawalRequests);
 

@@ -1,5 +1,4 @@
-const {PrismaClient} = require("@prisma/client");
-const jwt = require("jsonwebtoken");
+const { PrismaClient } = require("@prisma/client");
 
 const bidControllers = {};
 const prisma = new PrismaClient();
@@ -39,26 +38,24 @@ bidControllers.createBid = async(req, res) => {
                 }
             });
 
-        if (status === "ACTIVE") {
-            if (org[0]) {
-                const bid = await prisma
-                    .bid
-                    .create({
-                        data: {
-                            user_id: id,
-                            cpo_amount: parseFloat(cpo_amount),
-                            created_at: new Date(),
-                            title,
-                            description,
-                            fee: parseFloat(fee),
-                            status: "PENDING",
-                            tag,
-                            deadline: new Date(deadline)
-                        },
-                        include: {
-                            BidFiles: true
-                        }
-                    });
+    if (status === "ACTIVE") {
+      if (org[0]) {
+        const bid = await prisma.bid.create({
+          data: {
+            user_id: id,
+            cpo_amount: parseFloat(cpo_amount),
+            created_at: new Date(),
+            title,
+            description,
+            fee: parseFloat(fee),
+            status: "PENDING",
+            tag,
+            deadline: new Date(deadline),
+          },
+          include: {
+            BidFiles: true,
+          },
+        });
 
                 await prisma
                     .bidFiles
@@ -69,97 +66,31 @@ bidControllers.createBid = async(req, res) => {
                         }
                     });
 
-                res.json(bid);
-            } else {
-                return res
-                    .status(500)
-                    .send({status: 401, message: "Please create organization first!!"});
-            }
-        } else if (status === "SUSPENDED") {
-            return res
-                .status(500)
-                .send({status: 401, message: "Your account has been suspended!!"});
-        } else {
-            return res
-                .status(500)
-                .send({status: 401, message: "Please verify your account first!!"});
-        }
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
-            });
-    }
-};
-
-bidControllers.getOngoingBids = async(req, res) => {
-    const max = req.query.max;
-    const min = req.query.min;
-    const tag = req.query.tag;
-    const date = req.query.date;
-    const title = req.query.title;
-    const status = req.query.status;
-    const token = req.headers.authorization;
-    const {id} = req.user.newUser
-        ? req.user.newUser
-        : req.user;
-
-    try {
-        const applications = await prisma
-            .application
-            .findMany({
-                where: {
-                    user_id: id,
-                    status: "PENDING"
-                }
-            });
-        console.log(applications.length);
-
-        const bidsPromises = applications.map(async(application) => {
-            const bid = await prisma
-                .bid
-                .findMany({
-                    where: {
-                        id: application.bid_id,
-                        title: {
-                            contains: title || undefined
-                        },
-                        fee: {
-                            gte: parseFloat(min) || undefined,
-                            lte: parseFloat(max) || undefined
-                        },
-                        tag,
-                        
-                    },
-                    orderBy: {
-                      created_at: date === "latest"
-                          ? "desc"
-                          : "asc" || undefined
-                  },
-                  include: {
-                      BidFiles: true
-                  }
-                });
-            return bid;
+        res.json(bid);
+      } else {
+        return res.status(500).send({
+          status: 401,
+          message: "Please create organization first!!",
         });
-
-        const bids = await Promise.all(bidsPromises);
-        console.log(bids.length);
-
-        console.log(bids);
-        res.json(bids);
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
-            });
+      }
+    }else if(status === "SUSPENDED"){
+      return res.status(500).send({
+        status: 401,
+        message: "Your account has been suspended!!",
+      });
+    }else {
+      return res.status(500).send({
+        status: 401,
+        message: "Please verify your account first!!",
+      });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
 };
 
 bidControllers.browseBids = async(req, res) => {
@@ -195,16 +126,14 @@ bidControllers.browseBids = async(req, res) => {
                 }
             });
 
-        res.json(bids);
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
-            });
-    }
+    res.json(bids);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
 };
 
 bidControllers.browseBidsOrg = async (req, res) => {
@@ -229,7 +158,7 @@ bidControllers.browseBidsOrg = async (req, res) => {
 
     res.json(org);
   } catch (error) {
-    console.log(error);
+    
     return res.status(500).send({
       status: 500,
       message: error.meta || "Internal error check the server log!!",
@@ -253,7 +182,7 @@ bidControllers.getClosedBids = async(req, res) => {
 
         res.json(closedBids);
     } catch (error) {
-        console.log(error);
+        
         return res
             .status(500)
             .send({
@@ -280,16 +209,14 @@ bidControllers.getUpcomingBids = async(req, res) => {
                 }
             });
 
-        res.json(upcomingBids);
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
-            });
-    }
+    res.json(upcomingBids);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
 };
 
 bidControllers.getMyBids = async(req, res) => {
@@ -306,16 +233,14 @@ bidControllers.getMyBids = async(req, res) => {
                 }
             });
 
-        res.json(myBids);
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
-            });
-    }
+    res.json(myBids);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
 };
 
 bidControllers.getBidById = async(req, res) => {
@@ -379,106 +304,102 @@ bidControllers.getBidById = async(req, res) => {
                         }
                     })
 
-                // check if user already paid the fee
-                if (payment[0]) {
-                    return res.json(bid);
-                } else {
-                    if (balance < bid[0].fee) {
-                        return res
-                            .status(401)
-                            .send({status: 401, message: "Insufficient balance, please deposit enough amount of money in your acount"});
-                    } else {
-                        if (bid[0].status === "PENDING") {
-                            // update user balance
-                            await prisma
-                                .user
-                                .update({
-                                    where: {
-                                        id
-                                    },
-                                    data: {
-                                        active_balance: {
-                                            decrement: bid[0].fee
-                                        }
-                                    }
-                                });
-
-                            // update bid owner balance
-                            await prisma
-                                .user
-                                .update({
-                                    where: {
-                                        id: bid[0].user_id
-                                    },
-                                    data: {
-                                        active_balance: {
-                                            increment: bid[0].fee * 0.85
-                                        },
-                                        total_fee: {
-                                            increment: bid[0].fee * 0.85
-                                        }
-                                    }
-                                });
-
-                            // update bid info
-                            await prisma
-                                .bid
-                                .update({
-                                    where: {
-                                        id: bid_id
-                                    },
-                                    data: {
-                                        total_fee: {
-                                            increment: bid[0].fee
-                                        }
-                                    }
-                                });
-
-                            // create payment data
-                            await prisma
-                                .payment
-                                .create({
-                                    data: {
-                                        user_id: id,
-                                        bid_id,
-                                        amount: bid[0].fee,
-                                        paid_at: new Date(),
-                                        status: "COMPLETED"
-                                    }
-                                });
-                        }
-                    }
-                }
-                return res.json(bid);
-            } else if (id === bid[0].user_id) {
-                res.json(bid);
-            } else {
-                if (bid[0].status === "PENDING") {
-                    return res
-                        .status(401)
-                        .send({status: 401, message: "You already applied to the bid please wait for response from the organization!!"});
-                } else {
-                    return res.json(bid);
-                }
-            }
-        } else if (status === "SUSPENDED") {
-            return res
-                .status(500)
-                .send({status: 401, message: "Your account has been suspended!!"});
-        } else {
-            return res
-                .status(500)
-                .send({status: 401, message: "Please verify your account first!!"});
-        }
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
+        // check if user already paid the fee
+        if(payment[0]){
+          return res.json(bid);
+        }else{
+          if (balance < bid[0].fee) {
+            return res.status(401).send({
+              status: 401,
+              message:
+                "Insufficient balance, please deposit enough amount of money in your acount",
             });
+          } else {
+            if(bid[0].status === "PENDING"){
+                // update user balance
+            await prisma.user.update({
+              where: {
+                id,
+              },
+              data: {
+                active_balance: {
+                  decrement: bid[0].fee,
+                },
+              },
+            });
+  
+            // update bid owner balance
+            await prisma.user.update({
+              where: {
+                id: bid[0].user_id,
+              },
+              data: {
+                active_balance: {
+                  increment: bid[0].fee * 0.85,
+                },
+                total_fee: {
+                  increment: bid[0].fee  * 0.85,
+                },
+              },
+            });
+  
+            // update bid info
+            await prisma.bid.update({
+              where: {
+                id: bid_id,
+              },
+              data: {
+                total_fee: {
+                  increment: bid[0].fee,
+                },
+              },
+            });
+  
+            // create payment data
+            await prisma.payment.create({
+              data: {
+                user_id: id,
+                bid_id,
+                amount: bid[0].fee,
+                paid_at: new Date(),
+                status: "COMPLETED",
+              },
+            });
+            }
+          }
+        }
+        return res.json(bid);
+      } else if (id === bid[0].user_id) {
+        res.json(bid);
+      } else {
+        if(bid[0].status === "PENDING"){
+          return res.status(401).send({
+            status: 401,
+            message:
+              "You already applied to the bid please wait for response from the organization!!",
+          });
+        }else{
+          return res.json(bid);
+        }
+      }
+    }else if(status === "SUSPENDED"){
+      return res.status(500).send({
+        status: 401,
+        message: "Your account has been suspended!!",
+      });
+    }else {
+      return res.status(500).send({
+        status: 401,
+        message: "Please verify your account first!!",
+      });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
 };
 
 bidControllers.editBid = async(req, res) => {
@@ -538,45 +459,42 @@ bidControllers.editBid = async(req, res) => {
                 }
             })
 
-        res.json(bid)
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
-            });
-    }
+    res.json(bid)
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });    
+  }
 };
 
 bidControllers.removeBid = async(req, res) => {
     const {role} = req.admin;
     const id = parseInt(req.query.id);
 
-    try {
-        if (role) {
-            await prisma
-                .bid
-                .delete({where: {
-                        id
-                    }});
-
-            res.json({message: "Done!!"})
-        } else {
-            return res
-                .status(401)
-                .send({status: 401, message: "Unauthorized user!!"});
-        }
-    } catch (error) {
-        console.log(error);
-        return res
-            .status(500)
-            .send({
-                status: 500,
-                message: error.meta || "Internal error check the server log!!"
-            });
-    }
+  try {
+   if(role){
+    await prisma.bid.delete({
+      where: {
+        id
+      }
+     });
+     
+     res.json({message: "Done!!"})
+   }else {
+    return res.status(401).send({
+      status: 401,
+      message: "Unauthorized user!!",
+    });
+   }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.meta || "Internal error check the server log!!",
+    });
+  }
 };
 
 module.exports = bidControllers;

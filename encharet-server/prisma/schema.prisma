@@ -35,6 +35,8 @@ model organization {
   type          OrganizationType
   tin_number    String
   location      String
+  file_url      String
+  status        UserStatus     @default(PENDING)
   user_id       Int
   registered_at DateTime
   User          user             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)

@@ -5,6 +5,8 @@ import NotFoundErrorPage from './NotFoundErrorPage';
 import { BASE_URL } from '../util/Constants';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SettingsPage = () => {
     const token = localStorage.getItem('token');
@@ -13,7 +15,8 @@ const SettingsPage = () => {
         name: "",
         tin_number: "",
         type: "PRIVATE",
-        location: ""
+        location: "",
+        files: null,
     };
 
     const initialChangePasswordValues = {
@@ -42,7 +45,7 @@ const SettingsPage = () => {
     const handleCloseChangePasswordDialog = (e) => {
         setShowChangePasswordDialog(false);
     }
-
+ 
     const handleInputChange = (e) => {
         const { value } = e.target;
 
@@ -63,43 +66,86 @@ const SettingsPage = () => {
 
     const handleCreateOrg = (e) => {
         e.preventDefault();
-        console.log(formValues);
         setIsLoading(true);
 
+        if (formValues.files == null) {
+            toast.error("Please select a document.", { autoClose: 2000 });
+            setIsLoading(false);
+            return;
+          }
 
-        let config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: BASE_URL + '/api/create/org',
-            headers: {
-                'x-auth-token': token,
-                'Content-Type': 'application/json'
-            },
-            data: formValues
-        };
+        const data = new FormData();
+        data.append('name', formValues.name);
+        data.append('tin_number', formValues.tin_number);
+        data.append('type', formValues.type);
+        data.append('location', formValues.location);
+        data.append('files', formValues.files);
 
-        axios.request(config)
-            .then((response) => {
-                console.log(JSON.stringify(response.data));
+        
+        
+        
+        
+
+        let headers = {
+            'Content-Type': 'multipart/form-data',
+            'x-auth-token': token,
+        }
+
+        axios.post(BASE_URL + '/api/create/org', data, { headers })
+            .then(response => {
+                
+                setIsLoading(false);
                 setResult(response);
-                setIsLoading(false);
-                setShowDialog(true);
-                // showDialog(false);
-                //  navigate("/profile/"); // changed this to reload rather than redirect for better user experience
-                window.location.reload(false);
+//                setShowDialog(true);
+            toast.success("The organization has been created.", { autoClose: 3000 });
+
+                setDisplayVerify(false);
+                setTimeout(() => {
+                    navigate("/profile");                  
+                }, 2000); 
+
             })
-            .catch((error) => {
-                console.log(error.response);
-                setResult(error.response);
+            .catch(error => {
                 setIsLoading(false);
-                setShowDialog(true);
+                
+                setResult(error.response);
+                //setShowDialog(true);
+                toast.error(error.response.data.message, { autoClose: 2000 });
             });
+
+        // let config = {
+        //     method: 'post',
+        //     maxBodyLength: Infinity,
+        //     url: BASE_URL + '/api/create/org',
+        //     headers: {
+        //         'x-auth-token': token,
+        //         'Content-Type': 'application/json'
+        //     },
+        //     data: formValues
+        // };
+
+        // axios.request(config)
+        //     .then((response) => {
+        //         
+        //         setResult(response);
+        //         setIsLoading(false);
+        //         setShowDialog(true);
+        //         // showDialog(false);
+        //         //  navigate("/profile/"); // changed this to reload rather than redirect for better user experience
+        //         window.location.reload(false);
+        //     })
+        //     .catch((error) => {
+        //         
+        //         setResult(error.response);
+        //         setIsLoading(false);
+        //         setShowDialog(true);
+        //     });
 
     };
 
     const handleChangePasswordSubmit = (e) => {
         e.preventDefault();
-        console.log(changePasswordFormValues);
+        
         setIsLoading(true);
 
 
@@ -116,20 +162,28 @@ const SettingsPage = () => {
 
         axios.request(config)
             .then((response) => {
-                console.log(JSON.stringify(response.data));
+                
                 setResult(response);
                 setIsLoading(false);
                 setShowDialog(true);
                 setShowChangePasswordDialog(false);
             })
             .catch((error) => {
-                console.log(error.response);
+                
                 setShowDialog(true);
                 setResult(error.response);
                 setShowChangePasswordDialog(false);
                 setIsLoading(false);
             });
     }
+
+    const handleFileChange = (e) => {
+        setFormValues({
+            ...formValues,
+            files: e.target.files[0]
+        })
+        
+    };
 
     return (
         <div>
@@ -229,6 +283,34 @@ const SettingsPage = () => {
                                             required={true}
                                         />
                                     </div>
+                                    <div>
+                            <div className="mb-2 block">
+                                <Label htmlFor="cpo_amount" value="Document" />
+                            </div>
+                            <div className="rounded-lg bg-gray-50">
+                                <div>
+                                    {formValues.files == null ? (
+                                        <div className="flex items-center justify-center w-full">
+                                            <label className="flex flex-col w-full h-10 border-4 border-blue-200 border-dashed hover:bg-gray-100 hover:border-gray-300">
+                                                <div>
+                                                    <input
+                                                        type="file"
+                                                        className="opacity-0"
+                                                        required="true"
+                                                        onChange={handleFileChange}
+                                                    />
+                                                </div>
+                                            </label>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-row justify-center text-gray-600">
+                                            <p>{formValues.files.name}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
                                 </form>
                             </div>
                         </div>
@@ -325,6 +407,7 @@ const SettingsPage = () => {
                     </Button>
                 </div>
             </>
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={true}/>
         </div >
     )
 }
